@@ -193,7 +193,7 @@ if(!raw) lecErrors.push("ملف المحاضرات lectures.js ما انقرأ. 
   let [d,mo,y]=parts; if(!y) y=1448;
   const iso=d&&mo?hijriToISO(y,mo,d):null;
   if(!iso){lecErrors.push(`${where}: التاريخ «${x.التاريخ}» غير مفهوم. اكتبه بهذا الشكل: 7/5/1448`);return}
-  lectures.push({m:m.i,date:iso,hd:d,hm:HM[mo-1],hy:y,wd:WD[new Date(iso+"T12:00:00Z").getUTCDay()],
+  lectures.push({m:m.i,date:iso,hd:d,hmo:mo,hm:HM[mo-1],hy:y,wd:WD[new Date(iso+"T12:00:00Z").getUTCDay()],
     time:String(x.الوقت||"المغرب").trim(),sp:String(x.الداعية||"").trim(),ti:String(x.العنوان||"").trim(),note:String(x.ملاحظة||"").trim()});
 });
 lectures.sort((a,b)=>a.date.localeCompare(b.date)||a.m-b.m);
