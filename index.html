@@ -281,7 +281,7 @@ function headFor(m){
   document.getElementById("sh-plain").href=waUrl(c.ph);
 }
 function body(m){
-  const ls=upcoming.filter(l=>l.m===m.i);
+  const ls=cur.single&&cur.l?[cur.l]:upcoming.filter(l=>l.m===m.i);
   let h="";
   if(m.c.length>1) h+=`<p class="sh-q">أرسل إلى</p><div class="kind" role="group" aria-label="المستلم">`+m.c.map((c,j)=>`<button type="button" data-c="${j}" aria-pressed="${cur.c===j}">${c.role} ${esc(c.who)}</button>`).join("")+`</div>`;
   if(!ls.length){ h+=`<p class="empty">لا توجد محاضرات قادمة في هذا المسجد.</p><a class="send" href="${waUrl(m.c[cur.c].ph)}" target="_blank" rel="noopener">${waIcon}فتح المحادثة في الواتساب</a>`; }
@@ -302,7 +302,7 @@ function body(m){
 function openSheet(m,l){
   sheetFor=m;
   const first=l||upcoming.find(x=>x.m===m.i)||null;
-  cur={l:first,kind:first&&first.diff===0?"day":"before",c:0};
+  cur={l:first,kind:first&&first.diff===0?"day":"before",c:0,single:!!l};
   headFor(m); body(m);
   sheet.hidden=false; document.body.style.overflow="hidden";
   document.querySelector(".sheet").scrollTop=0;
