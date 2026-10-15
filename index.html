@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مساجد الجزيرة والفيحاء والسعادة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: light single theme. Patterned header band (eight-point star tiling), then filter bar, then district groups of arch-marked contact rows */
+:root{
+  color-scheme:light;
+  --bg:#f6faf8; --surface:#ffffff; --ink:#123a33; --muted:#6a7f79; --line:#e1ebe7;
+  --teal:#0e5a4e; --teal-2:#177a68; --mint:#e6f3ee; --gold:#b8913f; --gold-soft:#f5ecd9; --wa:#1fa855;
+  --display:"El Messiri","IBM Plex Sans Arabic",Tahoma,serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+.band{background:var(--teal);color:#fff;position:relative;overflow:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.09' stroke-width='1.2'%3E%3Crect x='18' y='18' width='28' height='28'/%3E%3Crect x='18' y='18' width='28' height='28' transform='rotate(45 32 32)'/%3E%3Ccircle cx='32' cy='32' r='6'/%3E%3Cpath d='M0 0L18 18M64 0L46 18M0 64L18 46M64 64L46 46'/%3E%3C/g%3E%3C/svg%3E");}
+.band::after{content:"";position:absolute;inset:auto 0 0 0;height:4px;background:linear-gradient(90deg,var(--gold),#d9b766,var(--gold))}
+.band-in{max-width:680px;margin:0 auto;padding-block:36px 40px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:.8rem;letter-spacing:.04em;color:#cfe6de}
+h1{font-family:var(--display);font-weight:700;font-size:2.2rem;line-height:1.25;margin:0;text-wrap:balance}
+.lead{margin:0;color:#d6ebe4;max-width:40ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:.85rem;font-variant-numeric:tabular-nums}
+.stat b{color:#f1d792;font-weight:600}
+
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:22px;padding-block:20px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tools{display:flex;flex-direction:column;gap:10px}
+.search{position:relative}
+.search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+#q{width:100%;font:inherit;padding:12px 44px 12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(14,90,78,.05)}
+#q::placeholder{color:#9aaca6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.9rem;padding:6px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--teal-2)}
+.chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+#q:focus-visible,.chip:focus-visible,.row:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.group{display:flex;flex-direction:column;gap:10px}
+.group h2{font-family:var(--display);font-weight:500;font-size:1.25rem;margin:0;color:var(--teal);display:flex;gap:10px;align-items:center}
+.group h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line))}
+.count{font-family:var(--body);font-size:.75rem;font-weight:600;color:var(--gold);background:var(--gold-soft);border-radius:999px;padding:1px 10px;font-variant-numeric:tabular-nums}
+.list{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 18px -12px rgba(14,90,78,.25)}
+.list li+li{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:14px;padding:14px 16px;text-decoration:none;color:inherit}
+.row:hover{background:var(--mint)}
+button.row{width:100%;border:0;background:none;font:inherit;text-align:right;cursor:pointer}
+.row[aria-expanded="true"]{background:var(--mint)}
+.row[aria-expanded="true"] .wa{background:var(--teal)}
+[hidden]{display:none!important}
+.sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet{width:100%;max-width:560px;background:var(--surface);border-radius:22px 22px 0 0;border-top:4px solid var(--gold);box-shadow:0 -12px 32px rgba(10,35,30,.18);display:flex;flex-direction:column;gap:14px;
+  padding-block:10px calc(22px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.grip{width:44px;height:5px;border-radius:9px;background:var(--line);align-self:center}
+.sh-head{display:flex;align-items:center;gap:12px}
+.sh-head .arch{width:46px;height:52px;font-size:1.1rem}
+.sh-head .info{flex:1;min-width:0}
+.sh-name{font-family:var(--display);font-weight:700;font-size:1.35rem;color:var(--teal);line-height:1.3}
+.close{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--muted);font:inherit;font-size:1.3rem;line-height:1;cursor:pointer}
+.close:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sh-q{margin:0;font-size:.85rem;color:var(--muted);letter-spacing:.02em}
+.sh-msgs{display:flex;flex-direction:column;gap:10px}
+.msg .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-weight:700;font-family:var(--display)}
+.msg .t small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (prefers-reduced-motion:no-preference){.sheet-bg:not([hidden]) .sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}}
+.msg{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.msg:hover{border-color:var(--wa)}
+.msg:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.msg .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.msg .t b{font-weight:600;color:var(--teal)}
+.msg .t small{color:var(--muted);font-size:.82rem;line-height:1.5}
+.msg .go{flex:none;width:34px;height:34px;border-radius:50%;background:var(--wa);display:grid;place-items:center}
+.msg .go svg{width:18px;height:18px;fill:#fff}
+.plain{font-size:.85rem;color:var(--muted);text-align:center;text-decoration:underline;text-underline-offset:3px}
+.arch{flex:none;width:40px;height:46px;display:grid;place-items:center;background:var(--mint);color:var(--teal);
+  border-radius:20px 20px 6px 6px;font-family:var(--display);font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums}
+.info{flex:1;min-width:0}
+.name{font-weight:600;font-size:1.05rem;color:var(--ink)}
+.who{color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.role{color:var(--teal-2);font-weight:500}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;user-select:all}
+.wa{flex:none;width:44px;height:44px;border-radius:50%;background:var(--wa);display:grid;place-items:center;box-shadow:0 4px 10px -4px rgba(31,168,85,.6)}
+.wa svg{width:24px;height:24px;fill:#fff}
+.empty{color:var(--muted);text-align:center;padding:28px;background:var(--surface);border:1px dashed var(--line);border-radius:16px}
+footer{text-align:center;color:var(--muted);font-size:.8rem}
+@media (prefers-reduced-motion:no-preference){.row,.chip{transition:background .15s,border-color .15s}.row:active .wa{transform:scale(.94)}}
+</style>
+</head>
+<body>
+<header class="band" dir="rtl">
+  <div class="band-in">
+    <span class="eyebrow">دليل التواصل</span>
+    <h1>المساجد التي أتابعها</h1>
+    <p class="lead">اضغط على اسم المسجد واختر الرسالة، ويفتح لك الواتساب والرسالة جاهزة.</p>
+    <div class="stats" id="stats"></div>
+  </div>
+</header>
+
+<div class="wrap" dir="rtl">
+  <div class="tools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="q" type="search" placeholder="ابحث باسم المسجد أو الإمام أو الرقم" aria-label="بحث">
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <main id="out" style="display:flex;flex-direction:column;gap:24px"></main>
+  <footer>الأرقام قابلة للنسخ بالضغط المطوّل عليها</footer>
+</div>
+
+<div class="sheet-bg" id="sheet" dir="rtl" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-name">
+    <div class="grip"></div>
+    <div class="sh-head">
+      <span class="arch" id="sh-i"></span>
+      <div class="info"><div class="sh-name" id="sh-name"></div><div class="who" id="sh-who"></div></div>
+      <button class="close" id="sh-close" type="button" aria-label="إغلاق">×</button>
+    </div>
+    <p class="sh-q">اختر الرسالة التي تبي ترسلها</p>
+    <div class="sh-msgs" id="sh-msgs"></div>
+    <a class="plain" id="sh-plain" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>
+  </div>
+</div>
+
+<script>
+const data=[
+["مسجد الجوير","الجزيرة","المؤذن","معاذ","0530823231"],
+["جامع الذياب","الفيحاء","الإمام","محمد","0506437177"],
+["مسجد الوالدين","الجزيرة","الإمام","عبدالرحمن","0532212142"],
+["جامع البداح","الفيحاء","الإمام","أبو سليمان","0503445224"],
+["مسجد صالح الفوزان","الفيحاء","المؤذن","عبدالله","0557442295"],
+["مسجد فوزان الفوزان","الفيحاء","الإمام","أحمد","0555450302"],
+["جامع الراجحي","الجزيرة","المؤذن","سلطان","0533999664"],
+["مسجد بن عثيمين","الجزيرة","الإمام","أحمد","0568786148"],
+["مسجد بن جبرين","الجزيرة","الإمام","مقبل","0502123355"],
+["جامع عمر","الجزيرة","الإمام","عبدالرحمن","0503165374"],
+["جامع الفدا","الجزيرة","الإمام","يوسف","0546251844"],
+["جامع عقيل","الجزيرة","المؤذن","إبراهيم","0503298500"],
+["جامع بن ماجه","السعادة","الإمام","عبدالرحمن","0555499597"],
+["جامع السعادة","السعادة","الإمام","إبراهيم","0594147155"],
+["جامع عقيل الراجحي","الجزيرة","الإمام","التويجري","0505451085"],
+["مسجد العواد","الفيحاء","المؤذن","","0554266680"],
+["جامع أم المؤمنين","السعادة","الإمام","فهد الوهيبي","0503483770"],
+["مسجد الإحسان","الفيحاء","","","0533300440"]
+].map((r,i)=>[...r,i+1]);
+const order=["الجزيرة","الفيحاء","السعادة",""];
+const label=d=>d?"حي "+d:"بدون حي";
+const ar=n=>n.toLocaleString("ar-SA");
+let active="الكل";
+let open=null;
+const msgs=[
+ {title:"تذكير قبل المحاضرة بأيام",text:"السلام عليكم ورحمة الله وبركاته\nحيّاكم الله، نذكّركم بالمحاضرة القادمة بإذن الله، ونرجو التكرّم بنشر الإعلان لجماعة المسجد ليصل إلى النساء في البيوت، فالدال على الخير كفاعله.\nجزاكم الله خيرًا وبارك في جهودكم."},
+ {title:"تذكير يوم المحاضرة",text:"السلام عليكم ورحمة الله وبركاته\nنذكّركم بأن المحاضرة اليوم بإذن الله، ونأمل منكم إعادة التذكير لجماعة المسجد وحثّ النساء على الحضور، لعل الله ينفع بها.\nجزاكم الله خيرًا وجعله في موازين حسناتكم."}
+];
+const waUrl=(ph,t)=>"https://wa.me/966"+ph.slice(1)+(t?"?text="+encodeURIComponent(t):"");
+const waIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></svg>';
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+document.getElementById("stats").innerHTML=`<span class="stat"><b>${ar(data.length)}</b> مسجدًا</span>`+
+  order.filter(d=>d).map(d=>`<span class="stat">${label(d)} <b>${ar(data.filter(r=>r[1]===d).length)}</b></span>`).join("");
+function chips(){
+  const opts=["الكل",...order.filter(d=>data.some(r=>r[1]===d))];
+  document.getElementById("chips").innerHTML=opts.map(o=>`<button class="chip" type="button" data-d="${esc(o)}" aria-pressed="${o===active}">${o==="الكل"?"الكل":label(o)}</button>`).join("");
+}
+function render(){
+  const q=document.getElementById("q").value.trim();
+  let html="";
+  for(const d of order){
+    if(active!=="الكل"&&active!==d)continue;
+    const rows=data.filter(r=>r[1]===d&&(!q||r.join(" ").includes(q)));
+    if(!rows.length)continue;
+    html+=`<section class="group"><h2>${label(d)} <span class="count">${ar(rows.length)}</span></h2><ul class="list">`+
+      rows.map(([n,,role,who,ph,i])=>`<li><button class="row" type="button" id="m${i}" data-i="${i}" aria-haspopup="dialog">
+        <span class="arch">${ar(i)}</span>
+        <div class="info"><div class="name">${esc(n)}</div>
+        <div class="who"><span class="role">${role}${who?": "+esc(who):""}</span><span class="num">${ph}</span></div></div>
+        <span class="wa">${waIcon}</span></button></li>`).join("")+`</ul></section>`;
+  }
+  document.getElementById("out").innerHTML=html||'<p class="empty">لا توجد نتائج مطابقة.</p>';
+}
+document.getElementById("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;active=b.dataset.d;chips();render()});
+document.getElementById("q").addEventListener("input",render);
+const sheet=document.getElementById("sheet");
+function openSheet(i){
+  const [n,,role,who,ph]=data[i-1]; open=i;
+  document.getElementById("sh-i").textContent=ar(i);
+  document.getElementById("sh-name").textContent=n;
+  document.getElementById("sh-who").innerHTML=(role?`<span class="role">${role}${who?": "+esc(who):""}</span>`:"")+`<span class="num">${ph}</span>`;
+  document.getElementById("sh-msgs").innerHTML=msgs.map((m,k)=>`<a class="msg" href="${waUrl(ph,m.text)}" target="_blank" rel="noopener"><span class="n">${ar(k+1)}</span><span class="t"><b>${m.title}</b><small>${esc(m.text.split("\n")[1])}</small></span><span class="go">${waIcon}</span></a>`).join("");
+  document.getElementById("sh-plain").href=waUrl(ph);
+  sheet.hidden=false; document.body.style.overflow="hidden";
+  document.getElementById("sh-close").focus();
+}
+function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; const i=open; open=null; document.getElementById("m"+i)?.focus(); }
+document.getElementById("out").addEventListener("click",e=>{const b=e.target.closest("button.row");if(b)openSheet(+b.dataset.i)});
+sheet.addEventListener("click",e=>{if(e.target===sheet)closeSheet()});
+document.getElementById("sh-close").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+chips();render();
+</script>
+</body>
+</html>
