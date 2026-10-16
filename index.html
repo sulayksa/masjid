@@ -309,7 +309,7 @@ function body(m){
       <button type="button" data-kind="before" aria-pressed="${cur.kind==="before"}" ${l.diff===0?"disabled":""}>تذكير قبل المحاضرة</button>
       <button type="button" data-kind="day" aria-pressed="${cur.kind==="day"}">تذكير يوم المحاضرة</button></div>
       <p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
-      ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager"></div>
+      ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${designAlt(l)}'}"></div>
       <button type="button" class="send" id="ad-share">${waIcon}إرسال التصميم مع الرسالة</button>
       <a class="send alt" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">إرسال الرسالة فقط إلى ${esc(m.c[cur.c].role||"المسجد")}</a>
       <p class="adnote" id="ad-note">«إرسال التصميم» يفتح قائمة المشاركة: اختر واتساب ثم محادثة المسجد. الرسالة تُنسخ أيضًا لو احتجت تلصقها.</p>`
@@ -319,13 +319,14 @@ function body(m){
   if(ls.length&&cur.l.design) prepDesign(cur.l);
 }
 /* ===== تصميم الإعلان ===== */
-const designUrl=l=>`designs/${encodeURIComponent(l.design)}.jpg`;
+const designUrl=l=>`${encodeURIComponent(l.design)}.jpg`;
+const designAlt=l=>`designs/${encodeURIComponent(l.design)}.jpg`;
 let designFile=null, designFor=null;
 function prepDesign(l){
   if(designFor===l.design&&designFile)return;
   designFor=l.design; designFile=null;
-  fetch(designUrl(l)).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{if(designFor===l.design)designFile=new File([b],`${l.design}.jpg`,{type:"image/jpeg"})})
-    .catch(()=>{const n=document.getElementById("ad-note");if(n)n.textContent="ما لقيت صورة التصميم. تأكد أن ملف designs/"+l.design+".jpg مرفوع."});
+  fetch(designUrl(l)).then(r=>r.ok?r:fetch(designAlt(l))).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{if(designFor===l.design)designFile=new File([b],`${l.design}.jpg`,{type:"image/jpeg"})})
+    .catch(()=>{const n=document.getElementById("ad-note");if(n)n.textContent="ما لقيت صورة التصميم. تأكد أن ملف "+l.design+".jpg مرفوع في المستودع."});
 }
 function shareDesign(){
   const l=cur.l, note=document.getElementById("ad-note"); if(!l)return;
