@@ -72,6 +72,11 @@ h1{font-family:var(--display);font-weight:700;font-size:2.1rem;line-height:1.25;
 .chev{flex:none;width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
 .empty{color:var(--muted);text-align:center;padding:28px;background:var(--surface);border:1px dashed var(--line);border-radius:16px;margin:0}
 .warn{background:var(--today-soft);color:var(--today);border-radius:14px;padding:12px 16px;font-size:.9rem}.warn ul{margin:6px 0 0;padding-right:18px}
+.ad{display:flex;justify-content:center}
+.ad img{width:100%;max-width:360px;border-radius:12px;border:1px solid var(--line);background:var(--mint);aspect-ratio:3/4;object-fit:contain}
+button.send{width:100%;border:0;font:inherit;font-weight:600;font-size:1.05rem;cursor:pointer}
+.send.alt{background:var(--surface);color:var(--teal);border:1px solid var(--teal);box-shadow:none;font-size:.95rem;padding:11px}
+.adnote{margin:0;font-size:.8rem;color:var(--muted);text-align:center;line-height:1.6}
 footer{text-align:center;color:var(--muted);font-size:.8rem}
 
 .sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
@@ -194,7 +199,7 @@ if(!raw) lecErrors.push("ملف المحاضرات lectures.js ما انقرأ. 
   const iso=d&&mo?hijriToISO(y,mo,d):null;
   if(!iso){lecErrors.push(`${where}: التاريخ «${x.التاريخ}» غير مفهوم. اكتبه بهذا الشكل: 7/5/1448`);return}
   lectures.push({m:m.i,date:iso,hd:d,hmo:mo,hm:HM[mo-1],hy:y,wd:WD[new Date(iso+"T12:00:00Z").getUTCDay()],
-    time:String(x.الوقت||"المغرب").trim(),sp:String(x.الداعية||"").trim(),ti:String(x.العنوان||"").trim(),note:String(x.ملاحظة||"").trim()});
+    time:String(x.الوقت||"المغرب").trim(),design:String(x.التصميم||"").trim(),sp:String(x.الداعية||"").trim(),ti:String(x.العنوان||"").trim(),note:String(x.ملاحظة||"").trim()});
 });
 lectures.sort((a,b)=>a.date.localeCompare(b.date)||a.m-b.m);
 const order=["الجزيرة","الفيحاء","السعادة",""];
@@ -304,9 +309,35 @@ function body(m){
       <button type="button" data-kind="before" aria-pressed="${cur.kind==="before"}" ${l.diff===0?"disabled":""}>تذكير قبل المحاضرة</button>
       <button type="button" data-kind="day" aria-pressed="${cur.kind==="day"}">تذكير يوم المحاضرة</button></div>
       <p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
-      <a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>`;
+      ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager"></div>
+      <button type="button" class="send" id="ad-share">${waIcon}إرسال التصميم مع الرسالة</button>
+      <a class="send alt" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">إرسال الرسالة فقط إلى ${esc(m.c[cur.c].role||"المسجد")}</a>
+      <p class="adnote" id="ad-note">«إرسال التصميم» يفتح قائمة المشاركة: اختر واتساب ثم محادثة المسجد. الرسالة تُنسخ أيضًا لو احتجت تلصقها.</p>`
+      :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>`}`;
   }
   document.getElementById("sh-body").innerHTML=h;
+  if(ls.length&&cur.l.design) prepDesign(cur.l);
+}
+/* ===== تصميم الإعلان ===== */
+const designUrl=l=>`designs/${encodeURIComponent(l.design)}.jpg`;
+let designFile=null, designFor=null;
+function prepDesign(l){
+  if(designFor===l.design&&designFile)return;
+  designFor=l.design; designFile=null;
+  fetch(designUrl(l)).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{if(designFor===l.design)designFile=new File([b],`${l.design}.jpg`,{type:"image/jpeg"})})
+    .catch(()=>{const n=document.getElementById("ad-note");if(n)n.textContent="ما لقيت صورة التصميم. تأكد أن ملف designs/"+l.design+".jpg مرفوع."});
+}
+function shareDesign(){
+  const l=cur.l, note=document.getElementById("ad-note"); if(!l)return;
+  const msg=message(l,cur.kind);
+  try{navigator.clipboard&&navigator.clipboard.writeText(msg).catch(()=>{})}catch(e){}
+  if(!designFile){note.textContent="الصورة لسا تتحمّل، انتظر ثانية واضغط مرة ثانية.";return}
+  const data={files:[designFile],text:msg};
+  if(navigator.canShare&&navigator.canShare(data)){
+    navigator.share(data).then(()=>{note.textContent="تم فتح المشاركة. إذا ما ظهرت الكتابة مع الصورة في الواتساب، الصقها، فهي منسوخة."}).catch(()=>{});
+  }else{
+    note.textContent="إرسال الصورة مع الرسالة يشتغل من الجوال على موقع GitHub. هنا: الرسالة منسوخة، واحفظ الصورة بالضغط المطوّل عليها.";
+  }
 }
 function openSheet(m,l){
   sheetFor=m;
@@ -319,6 +350,7 @@ function openSheet(m,l){
 }
 function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; sheetFor=null; }
 document.getElementById("sh-body").addEventListener("click",e=>{
+  if(e.target.closest("#ad-share")){shareDesign();return}
   const p=e.target.closest("[data-pick]"); const k=e.target.closest("[data-kind]"); const cc=e.target.closest("[data-c]");
   if(cc){cur.c=+cc.dataset.c;headFor(sheetFor);body(sheetFor)}
   else if(p){cur.l=lectures[+p.dataset.pick];cur.kind=cur.l.diff===0?"day":"before";body(sheetFor)}
