@@ -2,566 +2,372 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2C5A4E">
-<title>تذكير المحاضرات النسائية</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>مساجد الجزيرة والفيحاء والسعادة</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
 <style>
+/* Layout: light single theme. Patterned header band, two tabs (upcoming lectures by day / mosques by district), bottom sheet with ready WhatsApp message */
 :root{
-  --bg:#F5F7F6; --surface:#FFFFFF; --text:#1F2E2A; --muted:#7A8783;
-  --primary:#2C5A4E; --deep:#22483F; --soft:#E7F0EC; --tint:#E6EFEB;
-  --head-bg:#2C5A4E; --gold:#C9A46A; --line:#E2E9E6;
-  --today:#B07A2A; --today-bg:#FBF1DF; --wa:#1FA855;
-  --head:'IBM Plex Sans Arabic', Tahoma, sans-serif;
-  --body:'IBM Plex Sans Arabic', Tahoma, sans-serif;
-  --shadow:0 1px 2px rgba(31,46,42,.04), 0 6px 18px rgba(31,46,42,.05);
-  color-scheme: light;
+  color-scheme:light;
+  --bg:#f6faf8; --surface:#ffffff; --ink:#123a33; --muted:#6a7f79; --line:#e1ebe7;
+  --teal:#0e5a4e; --teal-2:#177a68; --mint:#e6f3ee; --gold:#b8913f; --gold-soft:#f5ecd9; --wa:#1fa855; --today:#c2552f; --today-soft:#fbe9e2;
+  --display:"El Messiri","IBM Plex Sans Arabic",Tahoma,serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-a{color:inherit}
-.wrap{max-width:680px;margin:0 auto;padding:0 18px 40px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+.band{background:var(--teal);color:#fff;position:relative;overflow:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='.09' stroke-width='1.2'%3E%3Crect x='18' y='18' width='28' height='28'/%3E%3Crect x='18' y='18' width='28' height='28' transform='rotate(45 32 32)'/%3E%3Ccircle cx='32' cy='32' r='6'/%3E%3Cpath d='M0 0L18 18M64 0L46 18M0 64L18 46M64 64L46 46'/%3E%3C/g%3E%3C/svg%3E");}
+.band::after{content:"";position:absolute;inset:auto 0 0 0;height:4px;background:linear-gradient(90deg,var(--gold),#d9b766,var(--gold))}
+.band-in{max-width:680px;margin:0 auto;padding-block:32px 36px;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:10px}
+.eyebrow{font-size:.8rem;letter-spacing:.04em;color:#cfe6de}
+h1{font-family:var(--display);font-weight:700;font-size:2.1rem;line-height:1.25;margin:0;text-wrap:balance}
+.lead{margin:0;color:#d6ebe4;max-width:42ch}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.stat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 12px;font-size:.85rem;font-variant-numeric:tabular-nums}
+.stat b{color:#f1d792;font-weight:600}
 
-/* ── الهيدر ── */
-header{position:relative;background:var(--head-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-opacity='.09' stroke-width='1.2'%3E%3Crect x='22' y='22' width='28' height='28' transform='rotate(45 36 36)'/%3E%3Crect x='26' y='26' width='20' height='20'/%3E%3Ccircle cx='36' cy='36' r='6'/%3E%3Cpath d='M0 0L22 22M72 0L50 22M0 72L22 50M72 72L50 50'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px;border-bottom:4px solid var(--gold);margin:0 -18px;padding:34px 22px 26px;text-align:right}
-.kicker{font-size:13px;color:#fff;opacity:.75}
-h1{font-family:var(--head);font-weight:700;color:#fff;font-size:32px;line-height:1.3;margin:6px 0 8px}
-.lede{color:#fff;opacity:.82;font-size:14.5px;max-width:460px;margin-bottom:16px}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);font-size:13.5px;color:#fff}
-.chip b{font-weight:500;color:var(--gold)}
-.chip.today{background:var(--today);border-color:var(--today);color:#fff}
-.chip.today b{color:#fff}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px;padding-block:18px 48px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--mint);border-radius:14px;padding:4px;gap:4px}
+.tab{font:inherit;font-weight:600;padding:10px;border:0;border-radius:11px;background:transparent;color:var(--teal);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface);box-shadow:0 2px 6px -2px rgba(14,90,78,.25)}
+.tools{display:flex;flex-direction:column;gap:10px}
+.search{position:relative}
+.search svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+#q{width:100%;font:inherit;padding:12px 44px 12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink)}
+#q::placeholder{color:#9aaca6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.9rem;padding:6px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--teal-2)}
+.chip[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+#q:focus-visible,.chip:focus-visible,.row:focus-visible,.tab:focus-visible,.send:focus-visible,.lec:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-/* ── التبويبات والبحث والفلتر ── */
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--tint);padding:5px;border-radius:16px;margin:22px 0 14px}
-.tabs button{padding:11px 6px;border-radius:12px;font-family:var(--head);font-weight:700;color:var(--deep);font-size:16px}
-.tabs button[aria-selected="true"]{background:var(--surface);color:var(--primary);box-shadow:var(--shadow)}
-.search{position:relative;margin-bottom:12px}
-.search input{width:100%;font:inherit;font-size:16px;color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:13px 46px 13px 16px;outline:none}
-.search input::placeholder{color:#A3AFAB}
-.search input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--soft)}
-.search svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
-.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:6px;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.filters button{flex:1 0 auto;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:13.5px;color:var(--text)}
-.filters button[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+#out{display:flex;flex-direction:column;gap:24px}
+.group{display:flex;flex-direction:column;gap:10px}
+.group h2{font-family:var(--display);font-weight:500;font-size:1.2rem;margin:0;color:var(--teal);display:flex;gap:10px;align-items:center}
+.group h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line))}
+.group h2 small{font-family:var(--body);font-size:.8rem;color:var(--muted);font-weight:400}
+.group.is-today h2{color:var(--today)}
+.count{font-family:var(--body);font-size:.75rem;font-weight:600;color:var(--gold);background:var(--gold-soft);border-radius:999px;padding:1px 10px;font-variant-numeric:tabular-nums}
+.list{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 6px 18px -12px rgba(14,90,78,.25)}
+.list li+li{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:14px;padding:14px 16px;width:100%;border:0;background:none;font:inherit;color:inherit;text-align:right;cursor:pointer}
+.row:hover{background:var(--mint)}
+.arch{flex:none;width:40px;height:46px;display:grid;place-items:center;background:var(--mint);color:var(--teal);
+  border-radius:20px 20px 6px 6px;font-family:var(--display);font-weight:700;font-size:1rem;font-variant-numeric:tabular-nums}
+.info{flex:1;min-width:0}
+.name{font-weight:600;font-size:1.05rem;color:var(--ink)}
+.who{color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center}
+.role{color:var(--teal-2);font-weight:500}
+.num{direction:ltr;unicode-bidi:isolate;font-variant-numeric:tabular-nums;user-select:all}
+.next{font-size:.78rem;font-weight:600;border-radius:999px;padding:1px 10px;background:var(--gold-soft);color:var(--gold)}
+.next.t0{background:var(--today-soft);color:var(--today)}
+.next.none{background:var(--bg);color:var(--muted);font-weight:400}
+.time{flex:none;text-align:center;min-width:58px;font-size:.78rem;color:var(--muted);line-height:1.35}
+.time b{display:block;font-family:var(--display);font-size:1rem;color:var(--teal)}
+.chev{flex:none;width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2}
+.empty{color:var(--muted);text-align:center;padding:28px;background:var(--surface);border:1px dashed var(--line);border-radius:16px;margin:0}
+.warn{background:var(--today-soft);color:var(--today);border-radius:14px;padding:12px 16px;font-size:.9rem}.warn ul{margin:6px 0 0;padding-right:18px}
+.ad{display:flex;justify-content:center}
+.ad img{width:100%;max-width:360px;border-radius:12px;border:1px solid var(--line);background:var(--mint);aspect-ratio:3/4;object-fit:contain}
+button.send{width:100%;border:0;font:inherit;font-weight:600;font-size:1.05rem;cursor:pointer}
+.send.alt{background:var(--surface);color:var(--teal);border:1px solid var(--teal);box-shadow:none;font-size:.95rem;padding:11px}
+.adnote{margin:0;font-size:.8rem;color:var(--muted);text-align:center;line-height:1.6}
+footer{text-align:center;color:var(--muted);font-size:.8rem}
 
-/* ── التنبيهات ── */
-.errors{background:#FDEDED;border:1px solid #F2C5C5;color:#9B2C2C;border-radius:16px;padding:12px 16px;margin:12px 0;font-size:13.5px}
-.errors strong{display:block;font-family:var(--head);font-weight:700;margin-bottom:4px}
-.errors ul{padding-right:18px}
-
-/* ── المجموعات ── */
-.group{margin-top:24px}
-.ghead{display:flex;align-items:center;gap:10px;margin:0 2px 10px}
-.ghead h2{font-family:var(--head);font-weight:700;font-size:22px;color:var(--deep);white-space:nowrap}
-.ghead .sub{font-size:13px;color:var(--muted);white-space:nowrap}
-.ghead .count{font-size:12.5px;background:#F8EEDD;color:#9C7638;border-radius:999px;min-width:26px;text-align:center;padding:0 8px;line-height:24px}
-.ghead .fade{flex:1;height:1px;background:linear-gradient(to left,var(--line),transparent)}
-.group.is-today .ghead h2{color:var(--today)}
-.group.is-today .ghead .count{background:var(--today);color:#fff}
-.group.is-today .row{background:linear-gradient(to left,var(--today-bg),#fff 70%)}
-.list{display:flex;flex-direction:column;gap:10px}
-.row,.mrow{display:flex;align-items:center;gap:14px;width:100%;text-align:right;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);transition:border-color .15s}
-.mrow{align-items:flex-start}
-.row:hover,.row:focus-visible,.mrow:hover,.mrow:focus-visible{border-color:#A9C7BC;outline:none}
-.arch{flex:none;width:46px;height:46px;border-radius:14px;background:var(--soft);display:grid;place-items:center;font-family:var(--head);font-weight:700;font-size:17px;color:var(--primary)}
-.arch svg{display:none}
-.main{flex:1;min-width:0}
-.name{font-family:var(--head);font-weight:700;font-size:17px;line-height:1.45;color:var(--text)}
-.meta{font-size:14px;color:var(--muted);line-height:1.6}
-.meta.title{color:var(--muted)}
-.spk{display:block;font-size:14px;color:var(--primary);margin-top:2px}
-.time{flex:none;font-size:15px;font-weight:500;color:var(--deep);white-space:nowrap}
-.chev{flex:none;width:16px;height:16px;color:#A9B6B2}
-.note{display:inline-block;margin-top:4px;font-size:11.5px;color:#fff;background:var(--today);border-radius:999px;padding:0 9px;line-height:20px}
-.empty{color:var(--muted);text-align:center;padding:36px 16px;font-size:14px}
-
-/* المساجد */
-.contact{display:flex;gap:8px;font-size:13.5px;color:var(--muted);flex-wrap:wrap}
-.contact .num{direction:ltr;unicode-bidi:isolate;color:var(--text);opacity:.8}
-.nextb{display:inline-block;margin-top:8px;font-size:12.5px;border-radius:999px;padding:2px 11px;background:var(--soft);color:var(--primary)}
-.nextb.none{background:#F0F3F2;color:var(--muted)}
-.nextb.today{background:var(--today);color:#fff}
-.nonum{font-size:12.5px;color:var(--today)}
-
-footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:32px}
-
-/* ── النافذة السفلية ── */
-.backdrop{position:fixed;inset:0;background:rgba(20,35,31,.35);opacity:0;pointer-events:none;transition:opacity .2s}
-.backdrop.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:680px;max-height:92vh;overflow-y:auto;background:var(--surface);border-radius:24px 24px 0 0;border-top:4px solid var(--gold);padding:20px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .26s cubic-bezier(.2,.8,.2,1);box-shadow:0 -8px 30px rgba(31,46,42,.14)}
-.sheet.open{transform:none}
-.sheet .x{position:absolute;top:14px;left:14px;width:36px;height:36px;border-radius:12px;background:var(--soft);color:var(--primary);font-size:22px;line-height:36px}
-.shead{display:flex;gap:12px;align-items:center;padding-left:44px;margin-bottom:14px}
-.shead h3{font-family:var(--head);font-weight:700;font-size:21px;color:var(--deep);line-height:1.35}
-.label{font-size:13px;color:var(--muted);margin:14px 2px 6px}
-.pills{display:flex;gap:6px;flex-wrap:wrap}
-.pills button{padding:7px 14px;border-radius:999px;border:1px solid var(--line);font-size:13.5px;color:var(--text);background:var(--surface)}
-.pills button[aria-pressed="true"]{border-color:var(--primary);background:var(--primary);color:#fff}
-.pills button:disabled{opacity:.4;cursor:not-allowed}
-.card{background:var(--soft);border-radius:18px;padding:14px 16px}
-.card .when{font-family:var(--head);font-weight:700;color:var(--deep);font-size:17px}
-.card .when.today{color:var(--today)}
-.card dl{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:14px;margin-top:6px}
-.card dt{color:var(--muted)}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:14px;background:var(--tint);padding:5px;border-radius:16px}
-.seg button{padding:10px 6px;border-radius:12px;font-size:14px;color:var(--deep)}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--primary);font-weight:500;box-shadow:var(--shadow)}
-.seg button:disabled{opacity:.4;cursor:not-allowed}
-.preview{white-space:pre-wrap;background:#FAFCFB;border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:14px;line-height:1.8;margin-top:6px}
-.send{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:15px;border-radius:16px;background:var(--wa);color:#fff;font-weight:500;font-size:16.5px;text-decoration:none}
-.send svg{width:21px;height:21px}
-.plain{display:block;text-align:center;margin-top:12px;font-size:13.5px;color:var(--muted)}
-.plain:hover{color:var(--primary)}
-.warn{background:var(--today-bg);color:var(--today);border-radius:16px;padding:10px 14px;font-size:13.5px;margin-top:12px}
-.copy{display:block;width:100%;margin-top:10px;padding:12px;border-radius:16px;border:1px solid var(--primary);color:var(--primary);font-weight:500}
-body.lock{overflow:hidden}
-.tcol{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px}
-.hasimg{width:16px;height:16px;color:var(--gold)}
-.design{display:block;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--soft);max-width:260px;margin:0 auto}
-.design img{display:block;width:100%;height:auto;aspect-ratio:3/4}
-button.send{border:0;cursor:pointer;font-family:inherit}
-.send.alt{background:var(--surface);color:var(--wa);border:1.5px solid var(--wa);margin-top:10px;font-size:15px;padding:12px}
-.hint{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.7}
-.hint .num{direction:ltr;unicode-bidi:isolate}
-.links{display:flex;justify-content:center;gap:18px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--deep);color:#fff;padding:10px 16px;border-radius:14px;font-size:13.5px;max-width:calc(100% - 32px);width:max-content;text-align:center;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:var(--shadow)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+.sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
+.sheet{width:100%;max-width:560px;max-height:88vh;overflow-y:auto;background:var(--surface);border-radius:22px 22px 0 0;border-top:4px solid var(--gold);box-shadow:0 -12px 32px rgba(10,35,30,.18);display:flex;flex-direction:column;gap:14px;
+  padding-block:10px calc(22px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.grip{width:44px;height:5px;border-radius:9px;background:var(--line);align-self:center;flex:none}
+.sh-head{display:flex;align-items:center;gap:12px}
+.sh-head .arch{width:46px;height:52px;font-size:1.1rem}
+.sh-name{font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--teal);line-height:1.3}
+.close{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--muted);font:inherit;font-size:1.3rem;line-height:1;cursor:pointer}
+.sh-q{margin:0;font-size:.85rem;color:var(--muted)}
+.lecs{display:flex;flex-direction:column;gap:10px}
+.lec{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg);text-align:right;font:inherit;color:inherit;cursor:pointer;width:100%}
+.lec[aria-pressed="true"]{border-color:var(--teal);background:var(--mint)}
+.lec .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lec .ti{font-weight:600}
+.lec .meta{font-size:.85rem;color:var(--muted)}
+.preview{white-space:pre-wrap;font-size:.9rem;line-height:1.75;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:0;color:var(--ink)}
+.kind{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.kind button{font:inherit;font-size:.85rem;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.kind button[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+.send{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;background:var(--wa);color:#fff;text-decoration:none;font-weight:600;font-size:1.05rem;box-shadow:0 6px 14px -6px rgba(31,168,85,.7)}
+.send svg{width:22px;height:22px;fill:#fff}
+.plain{font-size:.85rem;color:var(--muted);text-align:center;text-decoration:underline;text-underline-offset:3px}
+@media (prefers-reduced-motion:no-preference){.row,.chip,.lec{transition:background .15s,border-color .15s}.sheet-bg:not([hidden]) .sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-<header>
-  <div class="kicker">دليل التواصل والمحاضرات</div>
-  <h1>تذكير المحاضرات النسائية</h1>
-  <p class="lede">اختر المحاضرة أو المسجد، وتنفتح لك رسالة التذكير في الواتساب جاهزة بتفاصيل المحاضرة.</p>
-  <div class="chips" id="chips"></div>
+<header class="band" dir="rtl">
+  <div class="band-in">
+    <span class="eyebrow">دليل التواصل والمحاضرات</span>
+    <h1>المساجد التي أتابعها</h1>
+    <p class="lead">اختر المحاضرة أو المسجد، وتنفتح لك رسالة التذكير في الواتساب جاهزة بتفاصيل المحاضرة.</p>
+    <div class="stats" id="stats"></div>
+  </div>
 </header>
 
-<div class="tabs" role="tablist">
-  <button role="tab" id="tab-lec" aria-selected="true">المحاضرات القادمة</button>
-  <button role="tab" id="tab-mos" aria-selected="false">المساجد</button>
+<div class="wrap" dir="rtl">
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tab-l" type="button" role="tab" aria-selected="true" data-v="l">المحاضرات القادمة</button>
+    <button class="tab" id="tab-m" type="button" role="tab" aria-selected="false" data-v="m">المساجد</button>
+  </div>
+  <div class="tools">
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="q" type="search" placeholder="ابحث بالمسجد أو الداعية أو العنوان" aria-label="بحث">
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <main id="out"></main>
+  <footer>المحاضرات التي مضى تاريخها تختفي تلقائيًا</footer>
 </div>
 
-<div class="search">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-  <input id="q" type="search" placeholder="ابحث بالمسجد أو الداعية أو العنوان" autocomplete="off">
+<div class="sheet-bg" id="sheet" dir="rtl" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-name">
+    <div class="grip"></div>
+    <div class="sh-head">
+      <span class="arch" id="sh-i"></span>
+      <div class="info"><div class="sh-name" id="sh-name"></div><div class="who" id="sh-who"></div></div>
+      <button class="close" id="sh-close" type="button" aria-label="إغلاق">×</button>
+    </div>
+    <div id="sh-body" style="display:flex;flex-direction:column;gap:14px"></div>
+    <a class="send alt" id="sh-plain" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>
+  </div>
 </div>
-<div class="filters" id="filters"></div>
 
-<main id="view"></main>
-
-<footer>المحاضرات التي مضى تاريخها تختفي تلقائيًا</footer>
-</div>
-
-<div class="backdrop" id="backdrop"></div>
-<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-hidden="true"></section>
-
-<script src="lectures.js"></script>
+<script>document.write('<script src="lectures.js?t='+Date.now()+'"><\/script>')</script>
 <script>
-/* ═══════════════════════════════════════════════════════════
-   قائمة المساجد وأرقامها
-   كل سطر: [اسم المسجد, الحي, [[الصفة, الاسم, الرقم], ...]]
-   • الصفة والاسم يجوز يكونان فاضيين "".
-   • الرقم يبدأ بـ05.
-   • المسجد اللي ما له رقم بعد: اترك القائمة فاضية [] — يظهر بالموقع
-     بدون زر إرسال، وتقدر تنسخ الرسالة.
-   • رقم المسجد في الموقع = ترتيبه هنا.
-   ═══════════════════════════════════════════════════════════ */
 const data=[
-  // ── حي الفيحاء ──
-  ["جامع الحمادي","الفيحاء",[["","","0502423553"]]],
-  ["جامع الذياب","الفيحاء",[["","أم تركي","0554218377"]]],
-  ["جامع عكاشة","الفيحاء",[["","","0555400124"]]],
-  ["جامع عثمان بن عفان","الفيحاء",[["","","0555423231"]]],
-  ["جامع حنين","الفيحاء",[["","أم عادل","0505296285"]]],
-  ["مسجد الإحسان","الفيحاء",[["","مريم","0542999359"]]],
-  ["مسجد صالح الفوزان","الفيحاء",[["","أم أنس","0505185278"]]],
-  ["مسجد العواد","الفيحاء",[["","","0541707060"]]],
-  ["جامع زيد بن ثابت","الفيحاء",[["","","0556444202"]]],
-  ["جامع حصة البداح","الفيحاء",[["","أرام","0508488211"]]],
-  // ── حي السعادة ──
-  ["مسجد السندي","السعادة",[["","","0530557216"]]],
-  ["جامع أحمد بن حنبل","السعادة",[["","أم علي","0505299674"]]],
-  ["جامع عايض المتعب","السعادة",[["","نورا","0500081728"]]],
-  ["مسجد أبي بكر","السعادة",[["","","0545459539"]]],
-  ["جامع أم المؤمنين","السعادة",[["","أروى","0540069954"]]],
-  ["جامع عبدالرحمن المنصور","السعادة",[["","","0539390227"]]],
-  ["جامع ابن ماجه","السعادة",[["","أمل المكي","0504201190"]]],
-  // ── حي الجزيرة ──
-  ["مسجد سليمان الجوير","الجزيرة",[["","سعاد","0555174626"]]],
-  ["جامع الفدا","الجزيرة",[["","أم عبدالله","0566476644"]]],
-  ["مسجد جعفر الطيار","الجزيرة",[["","","0568227737"]]],
-  ["مسجد الوالدين","الجزيرة",[["","","0559855539"]]],
-  ["جامع الفاروق","الجزيرة",[["","","0504191610"]]],
-  ["مسجد بن مهدي","الجزيرة",[["","","0500800421"]]],
-  ["جامع التوحيد","الجزيرة",[["","أم عبدالله","0542316951"]]],
-  ["جامع عقيل الراجحي","الجزيرة",[["","أم وسام","0554895185"]]],
-  ["مسجد بن جبرين","الجزيرة",[["","منى","0554122144"]]]
-];
+["مسجد سليمان الجوير","الجزيرة",[["المؤذن","معاذ","0530823231"]]],
+["جامع الذياب","الفيحاء",[["الإمام","محمد","0506437177"]]],
+["مسجد الوالدين","الجزيرة",[["الإمام","عبدالرحمن","0532212142"]]],
+["جامع حصة البداح","الفيحاء",[["الإمام","أبو سليمان","0503445224"]]],
+["مسجد صالح الفوزان","الفيحاء",[["المؤذن","عبدالله","0557442295"]]],
+["جامع عبدالرحمن الراجحي","الجزيرة",[["المؤذن","سلطان","0533999664"]]],
+["مسجد بن جبرين","الجزيرة",[["الإمام","مقبل","0502123355"]]],
+["جامع عمر بن الخطاب","الجزيرة",[["الإمام","عبدالرحمن","0503165374"]]],
+["جامع الفدا","الجزيرة",[["الإمام","يوسف","0546251844"]]],
+["جامع عقيل الراجحي","الجزيرة",[["الإمام","التويجري","0505451085"],["المؤذن","إبراهيم","0503298500"]]],
+["جامع ابن ماجه","السعادة",[["الإمام","عبدالرحمن","0555499597"]]],
+["جامع السعادة","السعادة",[["الإمام","إبراهيم","0594147155"]]],
+["مسجد العواد","الفيحاء",[["المؤذن","","0554266680"]]],
+["جامع أم المؤمنين رضي الله عنها","السعادة",[["الإمام","فهد الوهيبي","0503483770"]]],
+["مسجد الإحسان","الفيحاء",[["","","0533300440"]]],
+["مسجد فوزان الفوزان","الفيحاء",[["الإمام","أحمد","0555450302"]]],
+["مسجد بن عثيمين","الجزيرة",[["الإمام","أحمد","0568786148"]]]
+].map((r,i)=>({n:r[0],d:r[1],c:r[2].map(([role,who,ph])=>({role,who,ph})),i:i+1}));
+const cTxt=c=>(c.role?`<span class="role">${c.role}${c.who?": "+esc(c.who):""}</span>`:"")+`<span class="num">${c.ph}</span>`;
+const cSearch=m=>m.c.map(c=>c.who+" "+c.ph).join(" ");
+/* المحاضرات تُقرأ من ملف lectures.js */
+const HM=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
+const WD=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const toEn=s=>String(s??"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+const normN=s=>String(s??"").replace(/رضي الله عنها?/g,"").replace(/[ًٌٍَُِّْـ]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/(^|\s)بن(?=\s|$)/g,"$1ابن").replace(/\s+/g," ").trim();
+const ALIAS={"جامع عقيل":"جامع عقيل الراجحي","جامع عمر":"جامع عمر بن الخطاب","جامع الراجحي":"جامع عبدالرحمن الراجحي","جامع البداح":"جامع حصة البداح","مسجد الجوير":"مسجد سليمان الجوير","جامع ام المؤمنين":"جامع أم المؤمنين رضي الله عنها"};
+function findMosque(name){
+  let n=normN(name); for(const k in ALIAS) if(normN(k)===n) n=normN(ALIAS[k]);
+  return data.find(m=>normN(m.n)===n);
+}
+let hijriMap=null;
+function hijriToISO(y,mo,d){
+  if(!hijriMap){ hijriMap={};
+    try{ const f=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura-nu-latn",{day:"numeric",month:"numeric",year:"numeric",timeZone:"UTC"});
+      for(let t=Date.UTC(2025,5,1);t<Date.UTC(2030,0,1);t+=864e5){
+        const p={}; f.formatToParts(new Date(t+432e5)).forEach(x=>p[x.type]=x.value);
+        hijriMap[`${parseInt(p.year)}/${p.month}/${p.day}`]=new Date(t).toISOString().slice(0,10);
+      }}catch(e){}
+  }
+  return hijriMap[`${y}/${mo}/${d}`];
+}
+const lectures=[], lecErrors=[];
+const raw=(typeof window!=="undefined"&&Array.isArray(window.المحاضرات))?window.المحاضرات:null;
+if(!raw) lecErrors.push("ملف المحاضرات lectures.js ما انقرأ. تأكد أن الملف مرفوع وما فيه خطأ في الكتابة (فاصلة أو علامة تنصيص ناقصة).");
+(raw||[]).forEach((x,idx)=>{
+  const where=`المحاضرة رقم ${idx+1}${x&&x.العنوان?` («${x.العنوان}»)`:""}`;
+  if(!x||!x.المسجد||!x.التاريخ){lecErrors.push(`${where}: ناقصها المسجد أو التاريخ.`);return}
+  const m=findMosque(x.المسجد); if(!m){lecErrors.push(`${where}: اسم المسجد «${x.المسجد}» غير موجود في قائمة المساجد.`);return}
+  const parts=toEn(x.التاريخ).split(/[\/\-\.\s]+/).filter(Boolean).map(Number);
+  let [d,mo,y]=parts; if(!y) y=1448;
+  const iso=d&&mo?hijriToISO(y,mo,d):null;
+  if(!iso){lecErrors.push(`${where}: التاريخ «${x.التاريخ}» غير مفهوم. اكتبه بهذا الشكل: 7/5/1448`);return}
+  lectures.push({m:m.i,date:iso,hd:d,hmo:mo,hm:HM[mo-1],hy:y,wd:WD[new Date(iso+"T12:00:00Z").getUTCDay()],
+    time:String(x.الوقت||"المغرب").trim(),design:String(x.التصميم||"").trim(),sp:String(x.الداعية||"").trim(),ti:String(x.العنوان||"").trim(),note:String(x.ملاحظة||"").trim()});
+});
+lectures.sort((a,b)=>a.date.localeCompare(b.date)||a.m-b.m);
+const order=["الجزيرة","الفيحاء","السعادة",""];
+const label=d=>d?"حي "+d:"بدون حي";
+const ar=n=>Number(n).toLocaleString("ar-SA");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const waIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3Z"/></svg>';
+const chev='<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>';
+const waUrl=(ph,t)=>"https://wa.me/966"+ph.slice(1)+(t?"?text="+encodeURIComponent(t):"");
 
-/* ترتيب الأحياء في الصفحة — أي حي جديد ينضاف هنا */
-const order=["الفيحاء","السعادة","الجزيرة",""];
+/* today in Riyadh */
+const todayISO=new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Riyadh"});
+const dayDiff=iso=>Math.round((Date.parse(iso)-Date.parse(todayISO))/864e5);
+lectures.forEach((l,k)=>{l.k=k;l.diff=dayDiff(l.date);l.mosque=data[l.m-1]});
+const upcoming=lectures.filter(l=>l.diff>=0);
 
-/* أسماء بديلة: الاسم المكتوب في ملف المحاضرات ← الاسم في القائمة */
-const aliases={
-  "جامع عقيل":"جامع عقيل الراجحي",
-  "مسجد الجوير":"مسجد سليمان الجوير",
-  "جامع الجوير":"مسجد سليمان الجوير",
-  "جامع المنصور":"جامع عبدالرحمن المنصور",
-  "جامع المتعب":"جامع عايض المتعب",
-  "مسجد السنيدي":"مسجد السندي",
-  "جامع حصه البداح":"جامع حصة البداح",
-  "مسجد الفوزان":"مسجد صالح الفوزان"
+const rel=n=>n===0?"اليوم":n===1?"غدًا":n===2?"بعد غد":n<=10?`بعد ${ar(n)} أيام`:`بعد ${ar(n)} يومًا`;
+const relMsg=n=>n===1?"غدًا":n===2?"بعد غدٍ":n<=10?`بعد ${ar(n)} أيام`:`بعد ${ar(n)} يومًا`;
+const when=l=>/^[٠-٩0-9]/.test(l.time)?`الساعة ${l.time.replace("م"," م")}`:`بعد صلاة ${l.time}`;
+const hdate=l=>`${l.wd} ${ar(l.hd)} ${l.hm}`;
+const details=l=>(l.note?`تنبيه: ${l.note}\n`:"")+`العنوان: ${l.ti}\nالداعية: ${l.sp}\nالموعد: ${hdate(l)}، ${when(l)}\nالمكان: ${l.mosque.n} (مصلى النساء)`;
+const DEF_MSG={
+  "قبل":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بالمحاضره النسائيه\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا.",
+  "يوم":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بالمحاضره النسائيه\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا."
 };
-
-/* نص احتياطي للرسائل إذا ما انقرأ lectures.js */
-const fallbackMessages={
-قبل:`السلام عليكم ورحمة الله وبركاته
-نذكّركم بالمحاضره النسائيه 
-نرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.
-جزاكم الله خيرًا.`,
-يوم:`السلام عليكم ورحمة الله وبركاته
-نذكّركم بالمحاضره النسائيه 
-نرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.
-جزاكم الله خيرًا.`
-};
-
-/* ═══════════════ المنطق — ما يحتاج تعديل ═══════════════ */
-(function(){
-const DAY=864e5;
-const AR="٠١٢٣٤٥٦٧٨٩";
-const ar=s=>String(s).replace(/[0-9]/g,d=>AR[d]);
-const lat=s=>String(s).replace(/[٠-٩]/g,d=>AR.indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const HMONTHS=["محرم","صفر","ربيع الأول","ربيع الآخر","جمادى الأولى","جمادى الآخرة","رجب","شعبان","رمضان","شوال","ذو القعدة","ذو الحجة"];
-const WDAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-const PRAYERS=["الفجر","الظهر","العصر","المغرب","العشاء"];
-
-function norm(s){
-  return String(s??"")
-    .replace(/رضي\s*الله\s*عن(ها|ه|هم)/g,"")
-    .replace(/[ً-ْٰـ]/g,"")
-    .replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي")
-    .replace(/(^|\s)بن(?=\s|$)/g,"$1ابن")
-    .replace(/\s+/g," ").trim();
-}
-
-/* المساجد */
-const mosques=data.map((r,i)=>({n:i+1,name:r[0],hood:r[1]||"",contacts:(r[2]||[]).filter(c=>c&&c[2]).map(c=>({role:c[0]||"",name:c[1]||"",phone:lat(c[2]).replace(/\D/g,"")})),lectures:[]}));
-const byName=new Map();
-mosques.forEach(m=>byName.set(norm(m.name),m));
-Object.entries(aliases).forEach(([a,t])=>{const m=byName.get(norm(t));if(m&&!byName.has(norm(a)))byName.set(norm(a),m);});
-
-/* اليوم بتوقيت الرياض */
-const todayStr=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Riyadh",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
-const [ty,tm,td]=todayStr.split("-").map(Number);
-const today=Date.UTC(ty,tm-1,td);
-
-/* جدول هجري ← ميلادي بتقويم أم القرى */
-const errors=[];
-const hijri=new Map();
-try{
-  const f=new Intl.DateTimeFormat("en-u-ca-islamic-umalqura-nu-latn",{timeZone:"UTC",day:"numeric",month:"numeric",year:"numeric"});
-  if(f.resolvedOptions().calendar!=="islamic-umalqura") throw 0;
-  for(let t=Date.UTC(2025,5,1);t<=Date.UTC(2029,11,31);t+=DAY){
-    const p={};f.formatToParts(new Date(t)).forEach(x=>p[x.type]=x.value);
-    hijri.set(`${parseInt(p.day)}/${parseInt(p.month)}/${parseInt(p.year)}`,t);
-  }
-}catch(e){errors.push("المتصفح ما يدعم تقويم أم القرى، حدّث المتصفح أو جرّب Chrome/Safari.");}
-
-function parseHijri(s){
-  const parts=lat(s).split(/[\/\-\.\\]/).map(x=>x.trim()).filter(Boolean);
-  if(parts.length<2||parts.length>3||parts.some(x=>!/^\d+$/.test(x)))return null;
-  const d=+parts[0],m=+parts[1],y=parts[2]?+parts[2]:1448;
-  const t=hijri.get(`${d}/${m}/${y}`);
-  return t===undefined?null:{t,d,m,y};
-}
-
-function timeText(v){
-  const s=String(v??"").trim();
-  if(!s)return {short:"المغرب",long:"بعد صلاة المغرب"};
-  const l=lat(s);
-  if(/^\d/.test(l)){
-    const hm=l.replace(/\s*(م|ص|مساء|مساءً|صباحا|صباحًا|pm|am)\.?$/i,"").trim();
-    const suf=/(ص|صباح|am)/i.test(l.slice(hm.length))?"ص":"م";
-    const t=ar(hm)+" "+suf;
-    return {short:t,long:"الساعة "+t};
-  }
-  const p=s.replace(/^(بعد\s*)?(صلاة\s*)?/,"").trim();
-  if(PRAYERS.includes(p)||PRAYERS.map(norm).includes(norm(p))){
-    const name=PRAYERS.find(x=>norm(x)===norm(p));
-    return {short:name,long:"بعد صلاة "+name};
-  }
-  return {short:s,long:s};
-}
-
-function whenText(n,inMsg){
-  if(n===0)return "اليوم";
-  if(n===1)return "غدًا";
-  if(n===2)return inMsg?"بعد غدٍ":"بعد غد";
-  if(n<=10)return `بعد ${ar(n)} أيام`;
-  return `بعد ${ar(n)} يومًا`;
-}
-
-/* مسار التصميم: رقم الفسح ← designs/رقم.jpg */
-function imgPath(v){
-  const s=lat(String(v??"").trim());
-  if(!s)return "";
-  if(/\.(jpe?g|png|webp)$/i.test(s))return s.includes("/")?s:"designs/"+s;
-  return "designs/"+s+".jpg";
-}
-
-/* قراءة المحاضرات */
-const raw=window.المحاضرات;
-const msgs=(window.الرسائل&&typeof window.الرسائل.قبل==="string"&&typeof window.الرسائل.يوم==="string")?window.الرسائل:fallbackMessages;
-const lectures=[];
-if(!Array.isArray(raw)){
-  errors.push("ملف المحاضرات lectures.js ما انقرأ: إما مو مرفوع جنب index.html، أو فيه فاصلة أو علامة تنصيص ناقصة. افتحه وتأكد من آخر تعديل.");
-}else{
-  raw.forEach((L,i)=>{
-    const no=`المحاضرة رقم ${ar(i+1)}`;
-    if(!L||typeof L!=="object"){errors.push(`${no}: مكتوبة بشكل غير صحيح.`);return;}
-    const label=L.المسجد?` (${esc(L.المسجد)} · ${esc(L.التاريخ||"")})`:"";
-    if(!String(L.المسجد||"").trim()){errors.push(`${no}${label}: ناقصها اسم المسجد.`);return;}
-    if(!String(L.التاريخ||"").trim()){errors.push(`${no}${label}: ناقصها التاريخ.`);return;}
-    const m=byName.get(norm(L.المسجد));
-    if(!m){errors.push(`${no}${label}: اسم المسجد غير موجود في القائمة.`);return;}
-    const h=parseHijri(L.التاريخ);
-    if(!h){errors.push(`${no}${label}: التاريخ غير مفهوم، اكتبه بالشكل 7/5/1448.`);return;}
-    const days=Math.round((h.t-today)/DAY);
-    if(days<0)return;
-    // المحاضرة اللي ما لها عنوان أو داعية ما تظهر لين تنكتب بياناتها
-    if(!String(L.العنوان||"").trim()||!String(L.الداعية||"").trim())return;
-    const wd=WDAYS[new Date(h.t).getUTCDay()];
-    const lec={i,m,days,t:h.t,wd,
-      hday:`${ar(h.d)} ${HMONTHS[h.m-1]}`,
-      hfull:`${ar(h.d)}/${ar(h.m)}/${ar(h.y)}`,
-      time:timeText(L.الوقت),
-      speaker:String(L.الداعية||"").trim(),
-      title:String(L.العنوان||"").trim(),
-      note:String(L.ملاحظة||"").trim(),
-      img:imgPath(L.الصورة)};
-    lectures.push(lec);m.lectures.push(lec);
-  });
-}
-lectures.sort((a,b)=>a.t-b.t||a.m.n-b.m.n||a.i-b.i);
-mosques.forEach(m=>m.lectures.sort((a,b)=>a.t-b.t||a.i-b.i));
-
-/* الرسالة */
-function buildMessage(lec,type){
-  const tpl=type==="يوم"?msgs.يوم:msgs.قبل;
-  const vals={
-    "متى":type==="يوم"?"اليوم":whenText(lec.days,true),
-    "العنوان":lec.title,"الداعية":lec.speaker,
-    "التاريخ":`يوم ${lec.wd} بتاريخ ${lec.hday}`,
-    "الوقت":lec.time.long,"المسجد":lec.m.name};
-  let lines=tpl.replace(/\r/g,"").split("\n").filter(line=>!((line.includes("[العنوان]")&&!lec.title)||(line.includes("[الداعية]")&&!lec.speaker)));
-  let out=lines.map(line=>line.replace(/\[(متى|العنوان|الداعية|التاريخ|الوقت|المسجد)\]/g,(_,k)=>vals[k])).join("\n");
-  if(lec.note){const k=out.indexOf("\n");out=k<0?out+"\nتنبيه: "+lec.note:out.slice(0,k)+"\nتنبيه: "+lec.note+out.slice(k);}
+const userMsg=(typeof window!=="undefined"&&window.الرسائل)||{};
+function message(l,kind){
+  const key=kind==="day"?"يوم":"قبل";
+  let tpl=String(userMsg[key]||DEF_MSG[key]).replace(/^\n+|\n+$/g,"");
+  const v={"متى":kind==="day"?"اليوم":relMsg(l.diff),"العنوان":l.ti,"الداعية":l.sp,"التاريخ":`يوم ${l.wd} بتاريخ ${ar(l.hd)} ${l.hm}`,"الوقت":when(l),"المسجد":l.mosque.n};
+  let out=tpl.replace(/\[([^\]]+)\]/g,(s,k)=>k.trim() in v?v[k.trim()]:s);
+  if(l.note){ out=out.replace(/\n/,`\nتنبيه: ${l.note}\n`); }
   return out;
 }
-const waLink=(phone,text)=>`https://wa.me/966${phone.replace(/^0/,"")}`+(text?`?text=${encodeURIComponent(text)}`:"");
 
-/* تحميل التصميم مسبقًا عشان المشاركة تفتح فورًا */
-const imgCache=new Map();
-function loadImg(url){
-  if(!imgCache.has(url)){
-    const rec={file:null,failed:false};
-    rec.p=fetch(url,{cache:"no-cache"}).then(r=>{if(!r.ok)throw 0;return r.blob();})
-      .then(b=>{rec.file=new File([b],url.split("/").pop(),{type:b.type||"image/jpeg"});return rec.file;})
-      .catch(()=>{rec.failed=true;return null;});
-    imgCache.set(url,rec);
+let view="l", active="الكل", sheetFor=null;
+function stats(){
+  const t=upcoming.filter(l=>l.diff===0).length;
+  document.getElementById("stats").innerHTML=`<span class="stat"><b>${ar(data.length)}</b> مسجدًا</span><span class="stat"><b>${ar(upcoming.length)}</b> محاضرة قادمة</span>`+(t?`<span class="stat">اليوم <b>${ar(t)}</b></span>`:"");
+}
+function chips(){
+  const opts=["الكل",...order.filter(d=>d&&data.some(r=>r.d===d))];
+  document.getElementById("chips").innerHTML=opts.map(o=>`<button class="chip" type="button" data-d="${esc(o)}" aria-pressed="${o===active}">${o==="الكل"?"الكل":label(o)}</button>`).join("");
+}
+const okD=m=>active==="الكل"||m.d===active;
+function nextOf(m){return upcoming.find(l=>l.m===m.i)}
+function renderLectures(q){
+  const warn=lecErrors.length?`<div class="warn"><b>تنبيه في ملف المحاضرات</b><ul>${lecErrors.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div>`:"";
+  const list=upcoming.filter(l=>okD(l.mosque)&&(!q||[l.mosque.n,l.sp,l.ti,cSearch(l.mosque)].join(" ").includes(q)));
+  if(!list.length) return warn+'<p class="empty">لا توجد محاضرات قادمة مطابقة.</p>';
+  const byDay=new Map(); list.forEach(l=>{if(!byDay.has(l.diff))byDay.set(l.diff,[]);byDay.get(l.diff).push(l)});
+  let h=warn;
+  for(const [n,ls] of byDay){
+    h+=`<section class="group${n===0?" is-today":""}"><h2>${rel(n)} <small>${hdate(ls[0])}</small> <span class="count">${ar(ls.length)}</span></h2><ul class="list">`+
+      ls.map(l=>`<li><button class="row" type="button" data-l="${l.k}" aria-haspopup="dialog">
+        <span class="arch">${ar(l.m)}</span>
+        <div class="info"><div class="name">${esc(l.mosque.n)}</div>
+        <div class="who"><span>${esc(l.ti)}</span></div>
+        <div class="who"><span class="role">${esc(l.sp)}</span>${l.note?`<span class="next t0">${esc(l.note)}</span>`:""}</div></div>
+        <div class="time"><b>${/^[٠-٩0-9]/.test(l.time)?esc(l.time):esc(l.time)}</b>${/^[٠-٩0-9]/.test(l.time)?"":"بعد الصلاة"}</div>${chev}</button></li>`).join("")+`</ul></section>`;
   }
-  return imgCache.get(url);
+  return h;
 }
-function toast(t){
-  let el=document.getElementById("toast");
-  if(!el){el=document.createElement("div");el.id="toast";el.className="toast";document.body.appendChild(el);}
-  el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),4200);
+function renderMosques(q){
+  let h="";
+  for(const d of order){
+    if(active!=="الكل"&&active!==d)continue;
+    const rows=data.filter(r=>r.d===d&&(!q||[r.n,cSearch(r)].join(" ").includes(q)));
+    if(!rows.length)continue;
+    h+=`<section class="group"><h2>${label(d)} <span class="count">${ar(rows.length)}</span></h2><ul class="list">`+
+      rows.map(r=>{const nx=nextOf(r);return `<li><button class="row" type="button" data-m="${r.i}" aria-haspopup="dialog">
+        <span class="arch">${ar(r.i)}</span>
+        <div class="info"><div class="name">${esc(r.n)}</div>
+        ${r.c.map(c=>`<div class="who">${cTxt(c)}</div>`).join("")}
+        <div class="who" style="margin-top:4px">${nx?`<span class="next${nx.diff===0?" t0":""}">المحاضرة القادمة ${rel(nx.diff)}</span>`:`<span class="next none">لا توجد محاضرات قادمة</span>`}</div></div>
+        ${chev}</button></li>`}).join("")+`</ul></section>`;
+  }
+  return h||'<p class="empty">لا توجد نتائج مطابقة.</p>';
 }
-function copyText(t){try{return navigator.clipboard?navigator.clipboard.writeText(t).then(()=>true,()=>false):Promise.resolve(false);}catch(e){return Promise.resolve(false);}}
-
-/* الحالة */
-const state={tab:"lec",hood:"الكل",q:""};
-const hoods=order.filter(h=>h&&mosques.some(m=>m.hood===h)).concat([...new Set(mosques.map(m=>m.hood))].filter(h=>h&&!order.includes(h)));
-const $=id=>document.getElementById(id);
-const archSvg=`<svg viewBox="0 0 34 40" aria-hidden="true"><path d="M1 40V17C1 9 9 4 17 1C25 4 33 9 33 17V40Z" fill="#F3E8EF"/></svg>`;
-const chev=`<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>`;
-const imgIconBtn=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg>`;
-const imgIcon=`<svg class="hasimg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="فيه تصميم"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 9"/></svg>`;
-const arch=n=>`<span class="arch">${archSvg}<span>${ar(n)}</span></span>`;
-
-/* الشارات */
-const todayCount=lectures.filter(l=>l.days===0).length;
-$("chips").innerHTML=`<span class="chip"><b>${ar(mosques.length)}</b> مسجدًا</span><span class="chip"><b>${ar(lectures.length)}</b> محاضرة قادمة</span>`+(todayCount?`<span class="chip today"><b>${ar(todayCount)}</b> محاضرة اليوم</span>`:"");
-
-/* الفلتر */
-function renderFilters(){
-  $("filters").innerHTML=["الكل",...hoods].map(h=>`<button data-h="${esc(h)}" aria-pressed="${state.hood===h}">${h==="الكل"?"الكل":"حي "+esc(h)}</button>`).join("");
-}
-$("filters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;state.hood=b.dataset.h;renderFilters();render();});
-
-function matches(text){
-  if(!state.q)return true;
-  const q=norm(lat(state.q)).replace(/\s+/g," ");
-  const qd=lat(state.q).replace(/\D/g,"");
-  const t=norm(lat(text));
-  if(t.includes(q))return true;
-  return qd.length>=3&&t.replace(/\D/g,"").includes(qd);
-}
-const mosqueText=m=>[m.name,...m.contacts.flatMap(c=>[c.role,c.name,c.phone])].join(" ");
-const lecText=l=>[mosqueText(l.m),l.speaker,l.title,l.note].join(" ");
-
 function render(){
-  const v=$("view");
-  let html=errors.length&&state.tab==="lec"?`<div class="errors" role="alert"><strong>تنبيه: فيه محاضرات ما ظهرت</strong><ul>${errors.map(e=>`<li>${e}</li>`).join("")}</ul></div>`:"";
-  const inHood=m=>state.hood==="الكل"||m.hood===state.hood;
-  if(state.tab==="lec"){
-    const list=lectures.filter(l=>inHood(l.m)&&matches(lecText(l)));
-    const groups=[];
-    list.forEach(l=>{let g=groups[groups.length-1];if(!g||g.days!==l.days){g={days:l.days,items:[],l};groups.push(g);}g.items.push(l);});
-    html+=groups.map(g=>`<section class="group${g.days===0?" is-today":""}">
-      <div class="ghead"><h2>${whenText(g.days)}</h2><span class="sub">${g.l.wd} · ${g.l.hday}</span><span class="fade"></span><span class="count">${ar(g.items.length)}</span></div>
-      <div class="list">${g.items.map(l=>`<button class="row" data-lec="${l.i}">${arch(l.m.n)}
-        <span class="main"><span class="name">${esc(l.m.name)}</span>
-          <span class="meta title" style="display:block">${l.title?esc(l.title):"<span style='color:var(--muted)'>العنوان لم يُحدد</span>"}</span>
-          <span class="spk">${l.speaker?esc(l.speaker):"<span style='color:var(--muted)'>الداعية لم تُحدد</span>"}${l.m.contacts.length?"":" · <span class='nonum'>بدون رقم</span>"}</span>
-          ${l.note?`<span class="note">${esc(l.note)}</span>`:""}</span>
-        <span class="tcol"><span class="time">${esc(l.time.short)}</span>${l.img?imgIcon:""}</span>${chev}</button>`).join("")}</div></section>`).join("");
-    if(!list.length)html+=`<p class="empty">${state.q?"ما فيه نتائج للبحث.":"لا توجد محاضرات قادمة."}</p>`;
+  const q=document.getElementById("q").value.trim();
+  document.getElementById("out").innerHTML=view==="l"?renderLectures(q):renderMosques(q);
+}
+
+/* sheet */
+const sheet=document.getElementById("sheet");
+let cur={l:null,kind:"before",c:0};
+function headFor(m){
+  document.getElementById("sh-i").textContent=ar(m.i);
+  document.getElementById("sh-name").textContent=m.n;
+  const c=m.c[cur.c];
+  document.getElementById("sh-who").innerHTML=cTxt(c);
+  document.getElementById("sh-plain").href=waUrl(c.ph);
+}
+function body(m){
+  const ls=cur.single&&cur.l?[cur.l]:upcoming.filter(l=>l.m===m.i);
+  let h="";
+  if(m.c.length>1) h+=`<p class="sh-q">أرسل إلى</p><div class="kind" role="group" aria-label="المستلم">`+m.c.map((c,j)=>`<button type="button" data-c="${j}" aria-pressed="${cur.c===j}">${c.role} ${esc(c.who)}</button>`).join("")+`</div>`;
+  if(!ls.length){ h+=`<p class="empty">لا توجد محاضرات قادمة في هذا المسجد.</p><a class="send" href="${waUrl(m.c[cur.c].ph)}" target="_blank" rel="noopener">${waIcon}فتح المحادثة في الواتساب</a>`; }
+  else{
+    if(ls.length>1) h+=`<p class="sh-q">اختر المحاضرة</p><div class="lecs">`+ls.map(l=>`<button class="lec" type="button" data-pick="${l.k}" aria-pressed="${cur.l===l}">
+      <span class="top"><span class="next${l.diff===0?" t0":""}">${rel(l.diff)}</span><span class="meta">${hdate(l)}</span></span>
+      <span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span>${l.note?`<span class="next t0" style="align-self:flex-start">${esc(l.note)}</span>`:""}</button>`).join("")+`</div>`;
+    const l=cur.l;
+    if(ls.length===1) h+=`<div class="lec" style="cursor:default"><span class="top"><span class="next${l.diff===0?" t0":""}">${rel(l.diff)}</span><span class="meta">${hdate(l)}</span></span><span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span></div>`;
+    h+=`<p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
+      ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${designAlt(l)}'}"></div>
+      <button type="button" class="send" id="ad-share" data-mode="both">${waIcon}إرسال الصورة مع الرسالة</button>
+      <button type="button" class="send alt" id="ad-share-img" data-mode="img">إرسال الصورة فقط</button>
+      <p class="adnote" id="ad-note">زرّا الصورة يفتحان قائمة المشاركة: اختر واتساب ثم محادثة المسجد.</p>`
+      :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>`}`;
+  }
+  document.getElementById("sh-body").innerHTML=h;
+  if(ls.length&&cur.l.design) prepDesign(cur.l);
+}
+/* ===== تصميم الإعلان ===== */
+const designUrl=l=>`${encodeURIComponent(l.design)}.jpg`;
+const designAlt=l=>`designs/${encodeURIComponent(l.design)}.jpg`;
+let designFile=null, designFor=null;
+function prepDesign(l){
+  if(designFor===l.design&&designFile)return;
+  designFor=l.design; designFile=null;
+  fetch(designUrl(l)).then(r=>r.ok?r:fetch(designAlt(l))).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{if(designFor===l.design)designFile=new File([b],`${l.design}.jpg`,{type:"image/jpeg"})})
+    .catch(()=>{const n=document.getElementById("ad-note");if(n)n.textContent="ما لقيت صورة التصميم. تأكد أن ملف "+l.design+".jpg مرفوع في المستودع."});
+}
+function shareDesign(mode){
+  const l=cur.l, note=document.getElementById("ad-note"); if(!l)return;
+  const msg=message(l,cur.kind), withText=mode!=="img";
+  if(withText){try{navigator.clipboard&&navigator.clipboard.writeText(msg).catch(()=>{})}catch(e){}}
+  if(!designFile){note.textContent="الصورة لسا تتحمّل، انتظر ثانية واضغط مرة ثانية.";return}
+  const data=withText?{files:[designFile],text:msg}:{files:[designFile]};
+  if(navigator.canShare&&navigator.canShare(data)){
+    navigator.share(data).then(()=>{note.textContent=withText?"إذا ما ظهرت الكتابة مع الصورة في الواتساب، الصقها، فهي منسوخة.":""}).catch(()=>{});
   }else{
-    const sections=(state.hood==="الكل"?hoods.concat(mosques.some(m=>!m.hood)?[""]:[]):[state.hood]).map(h=>({h,items:mosques.filter(m=>m.hood===h&&(matches(mosqueText(m))||m.lectures.some(l=>matches(l.speaker+" "+l.title))))})).filter(s=>s.items.length);
-    html+=sections.map(s=>`<section class="group"><div class="ghead"><h2>${s.h?"حي "+esc(s.h):"بدون حي"}</h2><span class="fade"></span><span class="count">${ar(s.items.length)}</span></div>
-      <div class="list">${s.items.map(m=>{const nx=m.lectures[0];return `<button class="mrow" data-m="${m.n}">${arch(m.n)}
-        <span class="main"><span class="name" style="display:block">${esc(m.name)}</span>
-        ${m.contacts.length?m.contacts.map(c=>`<span class="contact">${c.role?`<span>${esc(c.role)}</span>`:""}${c.name?`<span>${esc(c.name)}</span>`:""}<span class="num">${esc(c.phone)}</span></span>`).join(""):`<span class="nonum">لا يوجد رقم تواصل</span>`}
-        <span class="nextb ${nx?(nx.days===0?"today":""):"none"}">${nx?(nx.days===0?"المحاضرة القادمة اليوم":"المحاضرة القادمة "+whenText(nx.days)):"لا توجد محاضرات قادمة"}</span></span></button>`;}).join("")}</div></section>`).join("");
-    if(!sections.length)html+=`<p class="empty">ما فيه نتائج للبحث.</p>`;
+    note.textContent="إرسال الصورة مع الرسالة يشتغل من الجوال على موقع GitHub. هنا: الرسالة منسوخة، واحفظ الصورة بالضغط المطوّل عليها.";
   }
-  v.innerHTML=html;
 }
-
-/* التبويبات والبحث */
-function setTab(t){state.tab=t;$("tab-lec").setAttribute("aria-selected",t==="lec");$("tab-mos").setAttribute("aria-selected",t==="mos");render();}
-$("tab-lec").onclick=()=>setTab("lec");
-$("tab-mos").onclick=()=>setTab("mos");
-$("q").addEventListener("input",e=>{state.q=e.target.value.trim();render();});
-
-/* النافذة */
-const sheet=$("sheet"),bd=$("backdrop");
-let S=null;
-function openSheet(m,lec,fromMosque){
-  S={m,lec:lec||m.lectures[0]||null,fromMosque,contact:0,type:null};
-  S.type=S.lec&&S.lec.days===0?"يوم":"قبل";
-  drawSheet();
-  sheet.classList.add("open");bd.classList.add("open");sheet.setAttribute("aria-hidden","false");document.body.classList.add("lock");
-  setTimeout(()=>sheet.querySelector(".x")?.focus(),50);
+function openSheet(m,l){
+  sheetFor=m;
+  const first=l||upcoming.find(x=>x.m===m.i)||null;
+  cur={l:first,kind:first&&first.diff===0?"day":"before",c:0,single:!!l};
+  headFor(m); body(m);
+  sheet.hidden=false; document.body.style.overflow="hidden";
+  document.querySelector(".sheet").scrollTop=0;
+  document.getElementById("sh-close").focus();
 }
-function closeSheet(){sheet.classList.remove("open");bd.classList.remove("open");sheet.setAttribute("aria-hidden","true");document.body.classList.remove("lock");S=null;}
-function drawSheet(){
-  const {m,lec}=S,c=m.contacts[S.contact];
-  const who=c?[c.role,c.name].filter(Boolean).join(" ")||"جهة التواصل":"";
-  let h=`<button class="x" aria-label="إغلاق">×</button>
-  <div class="shead">${arch(m.n)}<div><h3>${esc(m.name)}</h3><div class="meta">${m.hood?"حي "+esc(m.hood):""}${c?` · ${esc(who)} · <span class="num" style="direction:ltr;unicode-bidi:isolate">${esc(c.phone)}</span>`:""}</div></div></div>`;
-  if(m.contacts.length>1)h+=`<div class="label">أرسل إلى</div><div class="pills" data-k="contact">${m.contacts.map((x,i)=>`<button data-v="${i}" aria-pressed="${i===S.contact}">${esc([x.role,x.name].filter(Boolean).join(" ")||x.phone)}</button>`).join("")}</div>`;
-  if(!lec){
-    h+=`<div class="card" style="margin-top:4px"><div class="when" style="color:var(--muted)">لا توجد محاضرات قادمة</div></div>`;
-    h+=c?`<a class="send" href="${waLink(c.phone)}" target="_blank" rel="noopener">${waIcon}فتح المحادثة في الواتساب</a>`:`<div class="warn">لا يوجد رقم تواصل لهذا المسجد.</div>`;
-    sheet.innerHTML=h;return;
-  }
-  if(S.fromMosque&&m.lectures.length>1)h+=`<div class="label">المحاضرة</div><div class="pills" data-k="lec">${m.lectures.map(l=>`<button data-v="${l.i}" aria-pressed="${l===lec}">${whenText(l.days)} · ${l.hday}</button>`).join("")}</div>`;
-  h+=`<div class="card" style="margin-top:${S.fromMosque&&m.lectures.length>1?10:4}px">
-    <div class="when ${lec.days===0?"today":""}">${whenText(lec.days)}</div>
-    <dl><dt>التاريخ</dt><dd>${lec.wd} ${lec.hday} <span style="color:var(--muted)">(${lec.hfull})</span></dd>
-    <dt>العنوان</dt><dd>${lec.title?esc(lec.title):"<span style='color:var(--muted)'>لم يُحدد</span>"}</dd>
-    <dt>الداعية</dt><dd>${lec.speaker?esc(lec.speaker):"<span style='color:var(--muted)'>لم تُحدد</span>"}</dd>
-    <dt>الوقت</dt><dd>${esc(lec.time.long)}</dd>
-    ${lec.note?`<dt>ملاحظة</dt><dd><span class="note" style="margin:0">${esc(lec.note)}</span></dd>`:""}</dl></div>`;
-  if(msgs.قبل!==msgs.يوم)h+=`<div class="seg" data-k="type"><button data-v="قبل" aria-pressed="${S.type==="قبل"}" ${lec.days===0?"disabled":""}>تذكير قبل المحاضرة</button><button data-v="يوم" aria-pressed="${S.type==="يوم"}">تذكير يوم المحاضرة</button></div>`;
-  const msg=buildMessage(lec,S.type);
-  const rec=lec.img?loadImg(lec.img):null;
-  const hasImg=rec&&!rec.failed;
-  if(hasImg){
-    h+=`<div class="label">التصميم</div><a class="design" href="${esc(lec.img)}" target="_blank" rel="noopener"><img src="${esc(lec.img)}" alt="تصميم المحاضرة" loading="eager" decoding="async"></a>`;
-    if(!rec.file)rec.p.then(()=>{if(S&&S.lec===lec&&rec.failed)drawSheet();});
-  }else if(rec&&rec.failed){
-    h+=`<div class="warn">التصميم ما انرفع: ملف ${esc(lec.img)} غير موجود في المستودع. تقدر ترسل النص الحين.</div>`;
-  }
-  h+=`<div class="label">معاينة الرسالة</div><div class="preview">${esc(msg)}</div>`;
-  if(c&&hasImg){
-    h+=`<button class="send" data-share="both">${waIcon}إرسال الصورة مع الرسالة</button>
-    <button class="send alt" data-share="img">${imgIconBtn}إرسال الصورة فقط</button>
-    <p class="hint">الزرّين فوق يفتحون قائمة المشاركة: اختر واتساب ثم محادثة <b>${esc(c.name||m.name)}</b> (<span class="num">${esc(c.phone)}</span>).</p>
-    <a class="send alt" href="${waLink(c.phone,msg)}" target="_blank" rel="noopener">${waIcon}إرسال الرسالة فقط</a>
-    <a class="plain" href="${waLink(c.phone)}" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>`;
-  }else if(c){
-    h+=`<a class="send" href="${waLink(c.phone,msg)}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>
-    <a class="plain" href="${waLink(c.phone)}" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>`;
-  }else{
-    h+=`<div class="warn">لا يوجد رقم تواصل لهذا المسجد. أضف الرقم في قائمة المساجد داخل index.html، أو انسخ الرسالة وأرسلها يدويًا.</div>
-    <button class="copy" data-copy>نسخ الرسالة</button>`;
-  }
-  sheet.innerHTML=h;
-}
-const waIcon=`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>`;
-
-sheet.addEventListener("click",e=>{
-  if(!S)return;
-  if(e.target.closest(".x")){closeSheet();return;}
-  if(e.target.closest("[data-copy]")){
-    const b=e.target.closest("[data-copy]");const txt=buildMessage(S.lec,S.type);
-    (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>{b.textContent="تم النسخ ✓";},()=>{b.textContent="ما قدرت أنسخ، انسخها من المعاينة";});
-    return;
-  }
-  const sh=e.target.closest("[data-share]");if(sh){shareNow(sh.dataset.share==="img");return;}
-  const b=e.target.closest("[data-v]");if(!b||b.disabled)return;
-  const k=b.parentElement.dataset.k,v=b.dataset.v;
-  if(k==="contact")S.contact=+v;
-  if(k==="type")S.type=v;
-  if(k==="lec"){S.lec=S.m.lectures.find(l=>l.i===+v);S.type=S.lec.days===0?"يوم":"قبل";}
-  drawSheet();
+function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; sheetFor=null; }
+document.getElementById("sh-body").addEventListener("click",e=>{
+  const sb=e.target.closest("[data-mode]"); if(sb){shareDesign(sb.dataset.mode);return}
+  const p=e.target.closest("[data-pick]"); const k=e.target.closest("[data-kind]"); const cc=e.target.closest("[data-c]");
+  if(cc){cur.c=+cc.dataset.c;headFor(sheetFor);body(sheetFor)}
+  else if(p){cur.l=lectures[+p.dataset.pick];cur.kind=cur.l.diff===0?"day":"before";body(sheetFor)}
+  else if(k&&!k.disabled){cur.kind=k.dataset.kind;body(sheetFor)}
 });
-function shareNow(imgOnly){
-  const lec=S.lec,c=S.m.contacts[S.contact],msg=buildMessage(lec,S.type),rec=loadImg(lec.img);
-  if(!imgOnly)copyText(msg);
-  const go=file=>{
-    if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
-      navigator.share(imgOnly?{files:[file]}:{files:[file],text:msg}).catch(err=>{if(err&&err.name!=="AbortError")toast("ما انفتحت المشاركة، جرّب مرة ثانية.");});
-      return true;
-    }
-    return false;
-  };
-  if(rec.file){
-    if(go(rec.file))return;
-    // متصفح ما يدعم مشاركة الصور (مثل الكمبيوتر): نزّل الصورة وافتح المحادثة بالنص
-    const a=document.createElement("a");a.href=lec.img;a.download=rec.file.name;document.body.appendChild(a);a.click();a.remove();
-    if(c)window.open(waLink(c.phone,imgOnly?"":msg),"_blank","noopener");
-    toast("الصورة نزلت على جهازك، أرفقها في المحادثة اللي انفتحت.");
-    return;
-  }
-  if(rec.failed){toast("التصميم غير موجود، أرسل النص فقط.");return;}
-  toast("جاري تجهيز الصورة… اضغط مرة ثانية بعد ثانية.");
-  rec.p.then(()=>{if(S)drawSheet();});
-}
-bd.addEventListener("click",closeSheet);
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&S)closeSheet();});
-$("view").addEventListener("click",e=>{
-  const r=e.target.closest("[data-lec]");
-  if(r){const l=lectures.find(x=>x.i===+r.dataset.lec);openSheet(l.m,l,false);return;}
-  const mr=e.target.closest("[data-m]");
-  if(mr){openSheet(mosques[+mr.dataset.m-1],null,true);}
+document.getElementById("out").addEventListener("click",e=>{
+  const b=e.target.closest("button.row"); if(!b)return;
+  if(b.dataset.l!==undefined){const l=lectures[+b.dataset.l];openSheet(l.mosque,l)}
+  else openSheet(data[+b.dataset.m-1]);
 });
-
-renderFilters();render();
-})();
+sheet.addEventListener("click",e=>{if(e.target===sheet)closeSheet()});
+document.getElementById("sh-close").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+document.querySelector(".tabs").addEventListener("click",e=>{const t=e.target.closest(".tab");if(!t)return;view=t.dataset.v;
+  document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));render()});
+document.getElementById("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;active=b.dataset.d;chips();render()});
+document.getElementById("q").addEventListener("input",render);
+stats();chips();render();
 </script>
 </body>
 </html>
