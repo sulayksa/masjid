@@ -139,7 +139,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem}
       <button class="close" id="sh-close" type="button" aria-label="إغلاق">×</button>
     </div>
     <div id="sh-body" style="display:flex;flex-direction:column;gap:14px"></div>
-    <a class="plain" id="sh-plain" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>
+    <a class="send alt" id="sh-plain" target="_blank" rel="noopener">فتح المحادثة بدون رسالة</a>
   </div>
 </div>
 
@@ -222,8 +222,8 @@ const when=l=>/^[٠-٩0-9]/.test(l.time)?`الساعة ${l.time.replace("م"," �
 const hdate=l=>`${l.wd} ${ar(l.hd)} ${l.hm}`;
 const details=l=>(l.note?`تنبيه: ${l.note}\n`:"")+`العنوان: ${l.ti}\nالداعية: ${l.sp}\nالموعد: ${hdate(l)}، ${when(l)}\nالمكان: ${l.mosque.n} (مصلى النساء)`;
 const DEF_MSG={
-  "قبل":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بمحاضرة نسائية [متى] بإذن الله:\n\n📖 [العنوان]\n🎙 [الداعية]\n🗓 [التاريخ] [الوقت]\n📍 [المسجد] (مصلى النساء)\n\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا.",
-  "يوم":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بمحاضرة نسائية اليوم بإذن الله:\n\n📖 [العنوان]\n🎙 [الداعية]\n🗓 [التاريخ] [الوقت]\n📍 [المسجد] (مصلى النساء)\n\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا."
+  "قبل":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بالمحاضره النسائيه\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا.",
+  "يوم":"السلام عليكم ورحمة الله وبركاته\nنذكّركم بالمحاضره النسائيه\nنرجو التكرّم بنشرها لجماعة المسجد لحثّ النساء على الحضور.\nجزاكم الله خيرًا."
 };
 const userMsg=(typeof window!=="undefined"&&window.الرسائل)||{};
 function message(l,kind){
@@ -305,14 +305,11 @@ function body(m){
       <span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span>${l.note?`<span class="next t0" style="align-self:flex-start">${esc(l.note)}</span>`:""}</button>`).join("")+`</div>`;
     const l=cur.l;
     if(ls.length===1) h+=`<div class="lec" style="cursor:default"><span class="top"><span class="next${l.diff===0?" t0":""}">${rel(l.diff)}</span><span class="meta">${hdate(l)}</span></span><span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span></div>`;
-    h+=`<div class="kind" role="group" aria-label="نوع الرسالة">
-      <button type="button" data-kind="before" aria-pressed="${cur.kind==="before"}" ${l.diff===0?"disabled":""}>تذكير قبل المحاضرة</button>
-      <button type="button" data-kind="day" aria-pressed="${cur.kind==="day"}">تذكير يوم المحاضرة</button></div>
-      <p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
+    h+=`<p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
       ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${designAlt(l)}'}"></div>
-      <button type="button" class="send" id="ad-share">${waIcon}إرسال التصميم مع الرسالة</button>
-      <a class="send alt" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">إرسال الرسالة فقط إلى ${esc(m.c[cur.c].role||"المسجد")}</a>
-      <p class="adnote" id="ad-note">«إرسال التصميم» يفتح قائمة المشاركة: اختر واتساب ثم محادثة المسجد. الرسالة تُنسخ أيضًا لو احتجت تلصقها.</p>`
+      <button type="button" class="send" id="ad-share" data-mode="both">${waIcon}إرسال الصورة مع الرسالة</button>
+      <button type="button" class="send alt" id="ad-share-img" data-mode="img">إرسال الصورة فقط</button>
+      <p class="adnote" id="ad-note">زرّا الصورة يفتحان قائمة المشاركة: اختر واتساب ثم محادثة المسجد.</p>`
       :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>`}`;
   }
   document.getElementById("sh-body").innerHTML=h;
@@ -328,14 +325,14 @@ function prepDesign(l){
   fetch(designUrl(l)).then(r=>r.ok?r:fetch(designAlt(l))).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{if(designFor===l.design)designFile=new File([b],`${l.design}.jpg`,{type:"image/jpeg"})})
     .catch(()=>{const n=document.getElementById("ad-note");if(n)n.textContent="ما لقيت صورة التصميم. تأكد أن ملف "+l.design+".jpg مرفوع في المستودع."});
 }
-function shareDesign(){
+function shareDesign(mode){
   const l=cur.l, note=document.getElementById("ad-note"); if(!l)return;
-  const msg=message(l,cur.kind);
-  try{navigator.clipboard&&navigator.clipboard.writeText(msg).catch(()=>{})}catch(e){}
+  const msg=message(l,cur.kind), withText=mode!=="img";
+  if(withText){try{navigator.clipboard&&navigator.clipboard.writeText(msg).catch(()=>{})}catch(e){}}
   if(!designFile){note.textContent="الصورة لسا تتحمّل، انتظر ثانية واضغط مرة ثانية.";return}
-  const data={files:[designFile],text:msg};
+  const data=withText?{files:[designFile],text:msg}:{files:[designFile]};
   if(navigator.canShare&&navigator.canShare(data)){
-    navigator.share(data).then(()=>{note.textContent="تم فتح المشاركة. إذا ما ظهرت الكتابة مع الصورة في الواتساب، الصقها، فهي منسوخة."}).catch(()=>{});
+    navigator.share(data).then(()=>{note.textContent=withText?"إذا ما ظهرت الكتابة مع الصورة في الواتساب، الصقها، فهي منسوخة.":""}).catch(()=>{});
   }else{
     note.textContent="إرسال الصورة مع الرسالة يشتغل من الجوال على موقع GitHub. هنا: الرسالة منسوخة، واحفظ الصورة بالضغط المطوّل عليها.";
   }
@@ -351,7 +348,7 @@ function openSheet(m,l){
 }
 function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; sheetFor=null; }
 document.getElementById("sh-body").addEventListener("click",e=>{
-  if(e.target.closest("#ad-share")){shareDesign();return}
+  const sb=e.target.closest("[data-mode]"); if(sb){shareDesign(sb.dataset.mode);return}
   const p=e.target.closest("[data-pick]"); const k=e.target.closest("[data-kind]"); const cc=e.target.closest("[data-c]");
   if(cc){cur.c=+cc.dataset.c;headFor(sheetFor);body(sheetFor)}
   else if(p){cur.l=lectures[+p.dataset.pick];cur.kind=cur.l.diff===0?"day":"before";body(sheetFor)}
