@@ -87,22 +87,17 @@ button.send{width:100%;border:0;font:inherit;font-weight:600;font-size:1.05rem;c
 .chk.on{border-color:var(--teal-2);background:var(--mint);color:var(--teal);font-weight:600}
 .chk input{width:20px;height:20px;accent-color:var(--teal-2);flex:none;margin:0}
 @media (max-width:360px){.checks{grid-template-columns:1fr}}
-/* ألوان الحالة */
-:root{--st-red:#D63A3A;--st-red-bg:#FDE3E3;--st-org:#EE8A1F;--st-org-bg:#FFEBD4;--st-grn:#2E9E62;--st-grn-bg:#DDF2E5}
-.list li.s-red{background:var(--st-red-bg);box-shadow:inset -8px 0 0 var(--st-red)}
-.list li.s-todo{background:var(--st-org-bg);box-shadow:inset -8px 0 0 var(--st-org)}
-.list li.s-half{background:linear-gradient(to left,var(--st-grn-bg) 0 50%,var(--st-org-bg) 50% 100%);box-shadow:inset -8px 0 0 var(--st-grn)}
-.list li.s-done{background:var(--st-grn-bg);box-shadow:inset -8px 0 0 var(--st-grn)}
-.list li[class^="s-"] .row:hover{background:rgba(255,255,255,.35)}
-.list li[class^="s-"] .arch{background:rgba(255,255,255,.75)}
-.spill{display:inline-block;margin-top:6px;font-size:.78rem;font-weight:700;border-radius:999px;padding:2px 10px;color:#fff}
-.s-red .spill{background:var(--st-red)} .s-todo .spill{background:var(--st-org)} .s-half .spill{background:var(--st-grn)} .s-done .spill{background:var(--st-grn)}
-.legend{display:flex;flex-wrap:wrap;gap:6px}
-.lg{font-size:.78rem;font-weight:600;border-radius:999px;padding:3px 10px;color:var(--ink)}
-.lg.s-red{background:var(--st-red-bg);border:1px solid var(--st-red)} .lg.s-todo{background:var(--st-org-bg);border:1px solid var(--st-org)}
-.lg.s-half{background:linear-gradient(to left,var(--st-grn-bg) 50%,var(--st-org-bg) 50%);border:1px solid var(--st-grn)} .lg.s-done{background:var(--st-grn-bg);border:1px solid var(--st-grn)}
-.chk.on{background:var(--st-grn);border-color:var(--st-grn);color:#fff}
-.chk.on input{accent-color:#fff}
+/* حالة التذكير */
+:root{--urg:#C62828;--urg-bg:#FDE7E7;--ok:#1E8E4E;--ok-bg:#E2F5EA;--wait:#B26A00;--wait-bg:#FFF2DC}
+.list li.urgent{background:var(--urg-bg);box-shadow:inset -6px 0 0 var(--urg)}
+.list li.urgent .arch{background:#fff;color:var(--urg)}
+.cps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cp{font-size:.76rem;font-weight:700;border-radius:8px;padding:2px 8px;border:1px solid}
+.cp.ok{background:var(--ok-bg);color:var(--ok);border-color:#9ED6B4}
+.cp.wait{background:var(--wait-bg);color:var(--wait);border-color:#F1C987}
+.cp.urg{background:var(--urg);color:#fff;border-color:var(--urg)}
+.urgbar{background:var(--urg);color:#fff;font-weight:700;border-radius:12px;padding:10px 14px;text-align:center}
+.chk.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
 footer{text-align:center;color:var(--muted);font-size:.8rem}
 
 .sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
@@ -268,15 +263,21 @@ const lid=l=>`${l.mosque.n}|${l.date}`;
 let doneMap={};
 try{doneMap=JSON.parse(localStorage.getItem("masjid-done")||"{}")||{}}catch(e){doneMap={}}
 const getDone=l=>doneMap[lid(l)]||{};
-function setDone(l,k,v){const o={...getDone(l)};o[k]=v;doneMap[lid(l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}}
+function setDone(l,k,v){const o={...getDone(l)};o[k]=v?todayISO:false;doneMap[lid(l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}}
 const mark=(ok,label)=>`<span class="st ${ok?"ok":"no"}">${ok?"✓":"✗"} ${label}</span>`;
 const marks=l=>{const d=getDone(l);return `<span class="sts">${mark(d.b,"قبل")}${mark(d.d,"يوم المحاضرة")}</span>`};
-/* لون حالة المحاضرة: أحمر = اليوم ولم يُذكَّر، برتقالي = لم يُذكَّر قبل، نصف أخضر = تم قبل وباقي يوم المحاضرة، أخضر = تم */
-function stateOf(l){const d=getDone(l);
-  if(l.diff===0) return d.d?"done":"red";
-  if(d.b&&d.d) return "done";
-  return d.b?"half":"todo";}
-const STATE_TXT={red:"اليوم: لم يتم التذكير!",todo:"لم يتم التذكير قبل المحاضرة",half:"تم قبل · باقي يوم المحاضرة",done:"تم التذكير ✓"};
+/* الشريط يتلون أحمر فقط: اليوم بدون تذكير يوم المحاضرة، أو غدًا بدون تذكير قبل */
+const urgent=l=>{const d=getDone(l);return (l.diff===0&&!d.d)||(l.diff===1&&!d.b)};
+function doneBeforeTxt(l){const v=getDone(l).b; if(!v) return "";
+  if(typeof v!=="string") return "تم التذكير قبل المحاضرة";
+  const n=Math.round((Date.parse(l.date)-Date.parse(v))/864e5);
+  if(n<=0) return "تم التذكير يوم المحاضرة";
+  return "تم التذكير قبل "+(n===1?"بيوم":n===2?"بيومين":n<=10?`${ar(n)} أيام`:`${ar(n)} يومًا`);}
+function remChips(l){const d=getDone(l); let h="";
+  if(urgent(l)) h+=`<span class="cp urg">${l.diff===0?"اليوم ولم يتم التذكير!":"غدًا ولم يتم التذكير!"}</span>`;
+  if(d.b) h+=`<span class="cp ok">✓ ${doneBeforeTxt(l)}</span>`; else if(l.diff>1) h+=`<span class="cp wait">لم يتم التذكير قبل</span>`;
+  if(d.d) h+=`<span class="cp ok">✓ تم التذكير يوم المحاضرة</span>`;
+  return `<span class="cps">${h}</span>`;}
 function stats(){
   const t=upcoming.filter(l=>l.diff===0).length;
   document.getElementById("stats").innerHTML=`<span class="stat"><b>${ar(data.length)}</b> مسجدًا</span><span class="stat"><b>${ar(upcoming.length)}</b> محاضرة قادمة</span>`+(t?`<span class="stat">اليوم <b>${ar(t)}</b></span>`:"");
@@ -292,15 +293,15 @@ function renderLectures(q){
   const list=upcoming.filter(l=>okD(l.mosque)&&(!q||[l.mosque.n,l.sp,l.ti,cSearch(l.mosque)].join(" ").includes(q)));
   if(!list.length) return warn+'<p class="empty">لا توجد محاضرات قادمة مطابقة.</p>';
   const byDay=new Map(); list.forEach(l=>{if(!byDay.has(l.diff))byDay.set(l.diff,[]);byDay.get(l.diff).push(l)});
-  const cnt={red:0,todo:0,half:0,done:0}; list.forEach(l=>cnt[stateOf(l)]++);
-  let h=warn+`<div class="legend"><span class="lg s-red">${ar(cnt.red)} اليوم بدون تذكير</span><span class="lg s-todo">${ar(cnt.todo)} لم يُذكَّر قبل</span><span class="lg s-half">${ar(cnt.half)} باقي تذكير يوم المحاضرة</span><span class="lg s-done">${ar(cnt.done)} تم</span></div>`;
+  const nu=list.filter(urgent).length;
+  let h=warn+(nu?`<div class="urgbar">${ar(nu)} محاضرة تحتاج تذكير الآن</div>`:"");
   for(const [n,ls] of byDay){
     h+=`<section class="group${n===0?" is-today":""}"><h2>${rel(n)} <small>${hdate(ls[0])}</small> <span class="count">${ar(ls.length)}</span></h2><ul class="list">`+
-      ls.map(l=>`<li class="s-${stateOf(l)}"><button class="row" type="button" data-l="${l.k}" aria-haspopup="dialog">
+      ls.map(l=>`<li${urgent(l)?' class="urgent"':''}><button class="row" type="button" data-l="${l.k}" aria-haspopup="dialog">
         <span class="arch">${ar(l.m)}</span>
         <div class="info"><div class="name">${esc(l.mosque.n)}</div>
         <div class="who"><span>${esc(l.ti)}</span></div>
-        <div class="who"><span class="role">${esc(l.sp)}</span>${l.note?`<span class="next t0">${esc(l.note)}</span>`:""}</div><span class="spill">${STATE_TXT[stateOf(l)]}</span></div>
+        <div class="who"><span class="role">${esc(l.sp)}</span>${l.note?`<span class="next t0">${esc(l.note)}</span>`:""}</div>${remChips(l)}</div>
         <div class="time"><b>${/^[٠-٩0-9]/.test(l.time)?esc(l.time):esc(l.time)}</b>${/^[٠-٩0-9]/.test(l.time)?"":"بعد الصلاة"}</div>${chev}</button></li>`).join("")+`</ul></section>`;
   }
   return h;
@@ -349,7 +350,7 @@ function body(m){
     if(ls.length===1) h+=`<div class="lec" style="cursor:default"><span class="top"><span class="next${l.diff===0?" t0":""}">${rel(l.diff)}</span><span class="meta">${hdate(l)}</span></span><span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span></div>`;
     const dn=getDone(l);
     h+=`<div class="checks" role="group" aria-label="حالة التذكير">
-      <label class="chk${dn.b?" on":""}"><input type="checkbox" id="chk-b" data-done="b" ${dn.b?"checked":""}><span>تم التذكير قبل المحاضرة</span></label>
+      <label class="chk${dn.b?" on":""}"><input type="checkbox" id="chk-b" data-done="b" ${dn.b?"checked":""}><span>${dn.b?doneBeforeTxt(l):"تم التذكير قبل المحاضرة"}</span></label>
       <label class="chk${dn.d?" on":""}"><input type="checkbox" id="chk-d" data-done="d" ${dn.d?"checked":""}><span>تم التذكير يوم المحاضرة</span></label>
     </div>
     <p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
@@ -397,7 +398,7 @@ function openSheet(m,l){
 function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; sheetFor=null; }
 document.getElementById("sh-body").addEventListener("change",e=>{
   const c=e.target.closest("[data-done]"); if(!c||!cur.l)return;
-  setDone(cur.l,c.dataset.done,c.checked); c.closest(".chk").classList.toggle("on",c.checked); render();
+  setDone(cur.l,c.dataset.done,c.checked); render(); body(sheetFor);
 });
 document.getElementById("sh-body").addEventListener("click",e=>{
   const sb=e.target.closest("[data-mode]"); if(sb){shareDesign(sb.dataset.mode);return}
