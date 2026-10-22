@@ -78,6 +78,15 @@ h1{font-family:var(--display);font-weight:700;font-size:2.1rem;line-height:1.25;
 button.send{width:100%;border:0;font:inherit;font-weight:600;font-size:1.05rem;cursor:pointer}
 .send.alt{background:var(--surface);color:var(--teal);border:1px solid var(--teal);box-shadow:none;font-size:.95rem;padding:11px}
 .adnote{margin:0;font-size:.8rem;color:var(--muted);text-align:center;line-height:1.6}
+.sts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.st{font-size:.75rem;font-weight:600;border-radius:999px;padding:1px 10px}
+.st.ok{background:var(--mint);color:var(--teal-2)}
+.st.no{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:.88rem;cursor:pointer;line-height:1.4}
+.chk.on{border-color:var(--teal-2);background:var(--mint);color:var(--teal);font-weight:600}
+.chk input{width:20px;height:20px;accent-color:var(--teal-2);flex:none;margin:0}
+@media (max-width:360px){.checks{grid-template-columns:1fr}}
 footer{text-align:center;color:var(--muted);font-size:.8rem}
 
 .sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
@@ -163,7 +172,8 @@ const data=[
 ["جامع أم المؤمنين رضي الله عنها","السعادة",[["الإمام","فهد الوهيبي","0503483770"]]],
 ["مسجد الإحسان","الفيحاء",[["","","0533300440"]]],
 ["مسجد فوزان الفوزان","الفيحاء",[["الإمام","أحمد","0555450302"]]],
-["مسجد بن عثيمين","الجزيرة",[["الإمام","أحمد","0568786148"]]]
+["مسجد بن عثيمين","الجزيرة",[["الإمام","أحمد","0568786148"]]],
+["مسجد أبا حسين","الجزيرة",[["","","0505105394"]]]
 ].map((r,i)=>({n:r[0],d:r[1],c:r[2].map(([role,who,ph])=>({role,who,ph})),i:i+1}));
 const cTxt=c=>(c.role?`<span class="role">${c.role}${c.who?": "+esc(c.who):""}</span>`:"")+`<span class="num">${c.ph}</span>`;
 const cSearch=m=>m.c.map(c=>c.who+" "+c.ph).join(" ");
@@ -237,6 +247,14 @@ function message(l,kind){
 }
 
 let view="l", active="الكل", sheetFor=null;
+/* ===== حالة التذكير (محفوظة في هذا المتصفح فقط) ===== */
+const lid=l=>`${l.mosque.n}|${l.date}`;
+let doneMap={};
+try{doneMap=JSON.parse(localStorage.getItem("masjid-done")||"{}")||{}}catch(e){doneMap={}}
+const getDone=l=>doneMap[lid(l)]||{};
+function setDone(l,k,v){const o={...getDone(l)};o[k]=v;doneMap[lid(l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}}
+const mark=(ok,label)=>`<span class="st ${ok?"ok":"no"}">${ok?"✓":"✗"} ${label}</span>`;
+const marks=l=>{const d=getDone(l);return `<span class="sts">${mark(d.b,"قبل")}${mark(d.d,"يوم المحاضرة")}</span>`};
 function stats(){
   const t=upcoming.filter(l=>l.diff===0).length;
   document.getElementById("stats").innerHTML=`<span class="stat"><b>${ar(data.length)}</b> مسجدًا</span><span class="stat"><b>${ar(upcoming.length)}</b> محاضرة قادمة</span>`+(t?`<span class="stat">اليوم <b>${ar(t)}</b></span>`:"");
@@ -259,7 +277,7 @@ function renderLectures(q){
         <span class="arch">${ar(l.m)}</span>
         <div class="info"><div class="name">${esc(l.mosque.n)}</div>
         <div class="who"><span>${esc(l.ti)}</span></div>
-        <div class="who"><span class="role">${esc(l.sp)}</span>${l.note?`<span class="next t0">${esc(l.note)}</span>`:""}</div></div>
+        <div class="who"><span class="role">${esc(l.sp)}</span>${l.note?`<span class="next t0">${esc(l.note)}</span>`:""}</div>${marks(l)}</div>
         <div class="time"><b>${/^[٠-٩0-9]/.test(l.time)?esc(l.time):esc(l.time)}</b>${/^[٠-٩0-9]/.test(l.time)?"":"بعد الصلاة"}</div>${chev}</button></li>`).join("")+`</ul></section>`;
   }
   return h;
@@ -306,12 +324,18 @@ function body(m){
       <span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span>${l.note?`<span class="next t0" style="align-self:flex-start">${esc(l.note)}</span>`:""}</button>`).join("")+`</div>`;
     const l=cur.l;
     if(ls.length===1) h+=`<div class="lec" style="cursor:default"><span class="top"><span class="next${l.diff===0?" t0":""}">${rel(l.diff)}</span><span class="meta">${hdate(l)}</span></span><span class="ti">${esc(l.ti)}</span><span class="meta">${esc(l.sp)} · ${when(l)}</span></div>`;
-    h+=`<p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
+    const dn=getDone(l);
+    h+=`<div class="checks" role="group" aria-label="حالة التذكير">
+      <label class="chk${dn.b?" on":""}"><input type="checkbox" id="chk-b" data-done="b" ${dn.b?"checked":""}><span>تم التذكير قبل المحاضرة</span></label>
+      <label class="chk${dn.d?" on":""}"><input type="checkbox" id="chk-d" data-done="d" ${dn.d?"checked":""}><span>تم التذكير يوم المحاضرة</span></label>
+    </div>
+    <p class="sh-q">الرسالة</p><pre class="preview">${esc(message(l,cur.kind))}</pre>
       ${l.design?`<div class="ad"><img id="ad-img" src="${designUrl(l)}" alt="تصميم إعلان المحاضرة" loading="eager" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='${designAlt(l)}'}"></div>
       <button type="button" class="send" id="ad-share" data-mode="both">${waIcon}إرسال الصورة مع الرسالة</button>
       <button type="button" class="send alt" id="ad-share-img" data-mode="img">إرسال الصورة فقط</button>
-      <p class="adnote" id="ad-note">زرّا الصورة يفتحان قائمة المشاركة: اختر واتساب ثم محادثة المسجد.</p>`
-      :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال في الواتساب</a>`}`;
+      <a class="send alt" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">إرسال الكتابة فقط</a>
+      <p class="adnote" id="ad-note">زرّا الصورة يفتحان قائمة المشاركة: اختر واتساب ثم محادثة المسجد. «إرسال الكتابة فقط» يفتح محادثة المسجد مباشرة.</p>`
+      :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال الكتابة فقط</a>`}`;
   }
   document.getElementById("sh-body").innerHTML=h;
   if(ls.length&&cur.l.design) prepDesign(cur.l);
@@ -348,6 +372,10 @@ function openSheet(m,l){
   document.getElementById("sh-close").focus();
 }
 function closeSheet(){ if(sheet.hidden)return; sheet.hidden=true; document.body.style.overflow=""; sheetFor=null; }
+document.getElementById("sh-body").addEventListener("change",e=>{
+  const c=e.target.closest("[data-done]"); if(!c||!cur.l)return;
+  setDone(cur.l,c.dataset.done,c.checked); c.closest(".chk").classList.toggle("on",c.checked); render();
+});
 document.getElementById("sh-body").addEventListener("click",e=>{
   const sb=e.target.closest("[data-mode]"); if(sb){shareDesign(sb.dataset.mode);return}
   const p=e.target.closest("[data-pick]"); const k=e.target.closest("[data-kind]"); const cc=e.target.closest("[data-c]");
