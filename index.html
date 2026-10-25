@@ -98,6 +98,19 @@ button.send{width:100%;border:0;font:inherit;font-weight:600;font-size:1.05rem;c
 .cp.urg{background:var(--urg);color:#fff;border-color:var(--urg)}
 .urgbar{background:var(--urg);color:#fff;font-weight:700;border-radius:12px;padding:10px 14px;text-align:center}
 .chk.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.apol{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
+.apol-btn{font:inherit;font-size:.9rem;font-weight:600;padding:10px;border-radius:12px;border:1px solid #E3B4B4;background:#FFF5F5;color:#B23B3B;cursor:pointer}
+.apol-confirm{background:#FFF5F5;border:1px solid #E3B4B4;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.apol-confirm p{margin:0;font-size:.88rem;color:#8A2E2E}
+.apol-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.apol-yes,.apol-no{font:inherit;font-weight:600;padding:10px;border-radius:10px;cursor:pointer}
+.apol-yes{background:#C62828;color:#fff;border:0}.apol-no{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.cancelled details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:.88rem}
+.cancelled summary{cursor:pointer;color:var(--muted);font-weight:600}
+.cancelled ul{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.cancelled li{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cancelled small{color:var(--muted)}
+.cancelled button{font:inherit;font-size:.82rem;padding:6px 12px;border-radius:999px;border:1px solid var(--teal);background:none;color:var(--teal);cursor:pointer;flex:none}
 footer{text-align:center;color:var(--muted);font-size:.8rem}
 
 .sheet-bg{position:fixed;inset:0;background:rgba(10,35,30,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10}
@@ -148,6 +161,7 @@ footer{text-align:center;color:var(--muted);font-size:.8rem}
     <div class="chips" id="chips"></div>
   </div>
   <main id="out"></main>
+  <div id="cancelled" class="cancelled"></div>
   <footer>المحاضرات التي مضى تاريخها تختفي تلقائيًا</footer>
 </div>
 
@@ -236,7 +250,7 @@ const waUrl=(ph,t)=>"https://wa.me/966"+ph.slice(1)+(t?"?text="+encodeURICompone
 const todayISO=new Date().toLocaleDateString("en-CA",{timeZone:"Asia/Riyadh"});
 const dayDiff=iso=>Math.round((Date.parse(iso)-Date.parse(todayISO))/864e5);
 lectures.forEach((l,k)=>{l.k=k;l.diff=dayDiff(l.date);l.mosque=data[l.m-1]});
-const upcoming=lectures.filter(l=>l.diff>=0);
+let upcoming=lectures.filter(l=>l.diff>=0);
 
 const rel=n=>n===0?"اليوم":n===1?"غدًا":n===2?"بعد غد":n<=10?`بعد ${ar(n)} أيام`:`بعد ${ar(n)} يومًا`;
 const relMsg=n=>n===1?"غدًا":n===2?"بعد غدٍ":n<=10?`بعد ${ar(n)} أيام`:`بعد ${ar(n)} يومًا`;
@@ -263,6 +277,7 @@ const lid=l=>`${l.mosque.n}|${l.date}`;
 let doneMap={};
 try{doneMap=JSON.parse(localStorage.getItem("masjid-done")||"{}")||{}}catch(e){doneMap={}}
 const getDone=l=>doneMap[lid(l)]||{};
+function refreshUp(){upcoming=lectures.filter(l=>l.diff>=0&&!getDone(l).x)}
 function setDone(l,k,v){const o={...getDone(l)};o[k]=v?todayISO:false;doneMap[lid(l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}}
 const mark=(ok,label)=>`<span class="st ${ok?"ok":"no"}">${ok?"✓":"✗"} ${label}</span>`;
 const marks=l=>{const d=getDone(l);return `<span class="sts">${mark(d.b,"قبل")}${mark(d.d,"يوم المحاضرة")}</span>`};
@@ -323,8 +338,11 @@ function renderMosques(q){
   return h||'<p class="empty">لا توجد نتائج مطابقة.</p>';
 }
 function render(){
+  refreshUp(); stats();
   const q=document.getElementById("q").value.trim();
   document.getElementById("out").innerHTML=view==="l"?renderLectures(q):renderMosques(q);
+  const cx=lectures.filter(l=>l.diff>=0&&getDone(l).x);
+  document.getElementById("cancelled").innerHTML=cx.length?`<details><summary>محاضرات اعتذرت عنها الداعية (${ar(cx.length)})</summary><ul>${cx.map(l=>`<li><span>${esc(l.mosque.n)} · ${hdate(l)}<br><small>${esc(l.ti)} · ${esc(l.sp)}</small></span><button type="button" data-restore="${l.k}">إرجاعها</button></li>`).join("")}</ul></details>`:"";
 }
 
 /* sheet */
@@ -361,6 +379,10 @@ function body(m){
       <p class="adnote" id="ad-note">زرّا الصورة يفتحان قائمة المشاركة: اختر واتساب ثم محادثة المسجد. «إرسال الكتابة فقط» يفتح محادثة المسجد مباشرة.</p>`
       :`<a class="send" href="${waUrl(m.c[cur.c].ph,message(l,cur.kind))}" target="_blank" rel="noopener">${waIcon}إرسال الكتابة فقط</a>`}`;
   }
+  if(ls.length) h+=`<div class="apol" id="apol">
+      <button type="button" class="apol-btn" data-apol="ask">الداعية اعتذرت</button>
+      <div class="apol-confirm" hidden><p>متأكد إن الداعية اعتذرت؟ المحاضرة بتنحذف من الموقع وما تحتاج تذكير.</p>
+        <div class="apol-row"><button type="button" class="apol-yes" data-apol="yes">نعم، احذفها</button><button type="button" class="apol-no" data-apol="no">تراجع</button></div></div></div>`;
   document.getElementById("sh-body").innerHTML=h;
   if(ls.length&&cur.l.design) prepDesign(cur.l);
 }
@@ -402,6 +424,12 @@ document.getElementById("sh-body").addEventListener("change",e=>{
 });
 document.getElementById("sh-body").addEventListener("click",e=>{
   const sb=e.target.closest("[data-mode]"); if(sb){shareDesign(sb.dataset.mode);return}
+  const ap=e.target.closest("[data-apol]");
+  if(ap){const box=document.querySelector("#apol .apol-confirm"), ask=document.querySelector("#apol .apol-btn");
+    if(ap.dataset.apol==="ask"){box.hidden=false;ask.hidden=true}
+    else if(ap.dataset.apol==="no"){box.hidden=true;ask.hidden=false}
+    else if(ap.dataset.apol==="yes"&&cur.l){const o={...getDone(cur.l),x:todayISO};doneMap[lid(cur.l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}closeSheet();render()}
+    return}
   const p=e.target.closest("[data-pick]"); const k=e.target.closest("[data-kind]"); const cc=e.target.closest("[data-c]");
   if(cc){cur.c=+cc.dataset.c;headFor(sheetFor);body(sheetFor)}
   else if(p){cur.l=lectures[+p.dataset.pick];cur.kind=cur.l.diff===0?"day":"before";body(sheetFor)}
@@ -419,7 +447,8 @@ document.querySelector(".tabs").addEventListener("click",e=>{const t=e.target.cl
   document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));render()});
 document.getElementById("chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;active=b.dataset.d;chips();render()});
 document.getElementById("q").addEventListener("input",render);
-stats();chips();render();
+document.getElementById("cancelled").addEventListener("click",e=>{const b=e.target.closest("[data-restore]");if(!b)return;const l=lectures[+b.dataset.restore];const o={...getDone(l)};delete o.x;doneMap[lid(l)]=o;try{localStorage.setItem("masjid-done",JSON.stringify(doneMap))}catch(e){}render()});
+chips();render();
 </script>
 </body>
 </html>
